@@ -1,0 +1,21 @@
+[package]
+name = "crav"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+audioviz = { path = "../audioviz" }
+cpal = "0.13.4"
+gag = "1.0.0"
+
+# termion backend
+termion = "1.5.6"
+
+# wgpu backend
+winit = "0.25"
+wgpu = "0.10.0"
+bytemuck = { version = "1.4", features = [ "derive" ] }
+pollster = "0.2"
+winit_input_helper = "0.10.0"
