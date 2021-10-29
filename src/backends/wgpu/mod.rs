@@ -16,8 +16,8 @@ use winit_input_helper::WinitInputHelper;
 use std::sync::mpsc;
 
 
-pub const PIXEL_WIDTH: u16 = 20;
-pub const PIXEL_HEIGHT: u16 = 10;
+pub const PIXEL_WIDTH: u16 = 18;
+pub const PIXEL_HEIGHT: u16 = 36;
 
 pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> Result<(), Box<dyn Error>> {
     let audio_ev = audio.get_event_sender();
@@ -41,7 +41,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
                 audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
                 let cfg = rx.recv().unwrap();
                 let config = audioviz::Config {
-                    volume: cfg.volume + 0.25,
+                    volume: cfg.volume * 1.1,
                     ..cfg
                 };
                 audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
@@ -51,7 +51,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
                 audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
                 let cfg = rx.recv().unwrap();
                 let config = audioviz::Config {
-                    volume: cfg.volume - 0.25,
+                    volume: cfg.volume * 0.9,
                     ..cfg
                 };
                 audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
@@ -76,7 +76,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
                         input:
                             KeyboardInput {
                                 state: ElementState::Pressed,
-                                virtual_keycode: Some(VirtualKeyCode::Escape),
+                                virtual_keycode: Some(VirtualKeyCode::Q),
                                 ..
                             },
                         ..

@@ -21,7 +21,7 @@ impl Default for Config {
             max_frequency: 10_000,
             fft_resolution: 6000,
             smoothing_size: 2,
-            smoothing_amount: 2,
+            smoothing_amount: 3,
             buffering: 7,
             color: Color::Rainbow,
             width: Width::Half,

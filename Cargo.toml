@@ -9,6 +9,7 @@ edition = "2021"
 audioviz = { path = "../audioviz" }
 cpal = "0.13.4"
 gag = "1.0.0"
+clap = "2.33.3"
 
 # termion backend
 termion = "1.5.6"

@@ -42,8 +42,8 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
             events::Event::Input(input) => match input {
                 Key::Char('q') => break 'main,
                 Key::Char('c') => config.color = *color_modes.next().unwrap(),
-                Key::Char('+') => audio.adjust_volume(0.1),
-                Key::Char('-') => audio.adjust_volume(-0.1),
+                Key::Char('+') => audio.adjust_volume(1.1),
+                Key::Char('-') => audio.adjust_volume(0.9),
                 Key::Char('w') => {
                     config.width = match config.width {
                         Width::Full => Width::Half,

@@ -9,7 +9,33 @@ mod audio;
 
 use gag::Gag;
 
+use clap::{Arg, App, AppSettings};
+
 fn main() -> Result<(), Box<dyn Error>> {
+    let matches = App::new("audiovis")
+    .version("0.1.0")
+    .author("Luca Biendl <b.lucab1211@gmail.com>")
+    .about("tool to visualize audio")
+    .setting(AppSettings::ColorAlways)
+    .setting(AppSettings::ColoredHelp)
+
+                
+    .arg(Arg::with_name("backend")
+                .long("backend")
+                .takes_value(true)
+                .help("can be Termion or Wgpu"))
+
+    .get_matches();
+
+    let backend: backends::Backend = match matches.value_of("backend") {
+        Some(b) => match b.to_lowercase().as_str() {
+            "termion" => backends::Backend::Termion,
+            "wgpu" => backends::Backend::Wgpu,
+            _ => panic!("invalid backend")
+        }
+        None => backends::Backend::Termion,
+    };
+
     let mut config = config::Config::default();
 
     let audio_config = Config {
@@ -19,6 +45,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         smoothing_size: config.smoothing_size as usize,
         volume: config.volume,
         buffering: config.buffering as usize,
+        resolution: 0.1,
         ..Default::default()
     };
     let audio = AudioStream::init(audio_config);
@@ -43,9 +70,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         config::Color::Rgb([255, 0, 0]),
         config::Color::Rainbow,
     ];
-    //let mut color_modes = color_modes.iter().cycle();
 
-    let backend = backends::Backend::Wgpu;
     backend.run(&mut config, audio, color_modes);
 
 

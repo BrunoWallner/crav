@@ -25,37 +25,38 @@ pub fn from_buffer(
     );
 
     let width = match config.width {
-        Width::Half => PIXEL_WIDTH as f32 / window_size.0 as f32 * 0.5,
-        Width::Full => PIXEL_WIDTH as f32 / window_size.0 as f32 * 1.01, // because of some odd spacing
+        Width::Half => PIXEL_WIDTH as f32 / window_size.0 as f32 * 1.0,
+        Width::Full => PIXEL_WIDTH as f32 / window_size.0 as f32 * 2.1, // to compensate for some odd spacing
     };
 
     for y in 0..h as usize {
         let color: [f32; 3] = match config.color {
             Color::Rgb(c) => [ 
-                    c[0] as f32 / 255.0,
-                    c[1] as f32 / 255.0,
-                    c[2] as f32 / 255.0,
+                    (c[0] as f32 / 255.0).powf(2.2),
+                    (c[1] as f32 / 255.0).powf(2.2),
+                    (c[2] as f32 / 255.0).powf(2.2),
                 ],
             Color::Rainbow => {
                 let c = Color::rainbow_from_y(y as f32 / h as f32);
                 [ 
-                    c[0] as f32 / 255.0,
-                    c[1] as f32 / 255.0,
-                    c[2] as f32 / 255.0,
+                    (c[0] as f32 / 255.0).powf(2.2),
+                    (c[1] as f32 / 255.0).powf(2.2),
+                    (c[2] as f32 / 255.0).powf(2.2),
                 ]
             }
         };
+
         for x in 0..w as usize {
             if grid[y][x] > 0 && grid[y][x] <= 8 {
-                let p = grid[y][x] as f32 / h as f32;
+                let p = grid[y][x] as f32 * (1.0 / h as f32) / 8.0 * 2.0;
 
                 let x = x as f32 / w as f32 * 2.0 - 1.0;
                 let y = y as f32 / h as f32 * 2.0 - 1.0;
     
-                vertices.push(Vertex { position: [x - width,  y, 0.0],   color});
+                vertices.push(Vertex { position: [x,  y, 0.0],   color});
                 vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
     
-                vertices.push(Vertex { position: [x - width,  y + p, 0.0],   color});
+                vertices.push(Vertex { position: [x,  y + p, 0.0],   color});
                 vertices.push(Vertex { position: [x + width,  y + p, 0.0],   color});
     
                 let i = vertices.len() as u32 - 4;
