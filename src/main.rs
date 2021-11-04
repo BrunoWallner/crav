@@ -11,6 +11,8 @@ use gag::Gag;
 
 use clap::{Arg, App, AppSettings};
 
+use std::fs;
+
 fn main() -> Result<(), Box<dyn Error>> {
     let matches = App::new("audiovis")
     .version("0.1.0")
@@ -21,9 +23,22 @@ fn main() -> Result<(), Box<dyn Error>> {
 
                 
     .arg(Arg::with_name("backend")
+                .short("b")
                 .long("backend")
                 .takes_value(true)
                 .help("can be Termion or Wgpu"))
+
+    .arg(Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .takes_value(true)
+                .help("path of config"))
+
+    .arg(Arg::with_name("print_config")
+                .short("p")
+                .long("print_config")
+                .takes_value(false)
+                .help("prints default config to './default_config.json'"))
 
     .get_matches();
 
@@ -36,19 +51,39 @@ fn main() -> Result<(), Box<dyn Error>> {
         None => backends::Backend::Termion,
     };
 
-    let mut config = config::Config::default();
+    if matches.is_present("print_config") {
+        let config = config::Config::default();
+        let c_str = serde_json::to_string_pretty(&config).unwrap();
+        println!("{}", c_str);
+        fs::write("./default_config.json", c_str.as_bytes()).unwrap();
+        std::process::exit(0);
+    }
 
-    let audio_config = Config {
-        max_frequency: config.max_frequency as usize,
-        fft_resolution: config.fft_resolution as usize,
-        smoothing_amount: config.smoothing_amount as usize,
-        smoothing_size: config.smoothing_size as usize,
-        volume: config.volume,
-        buffering: config.buffering as usize,
-        resolution: 0.1,
-        ..Default::default()
+    //let mut config = config::Config::default();
+
+    let mut config: config::Config = match matches.value_of("config") {
+        Some(p) => {
+            let c_str = match fs::read(p) {
+                Ok(c) => c,
+                Err(e) => {
+                    println!("{}", e);
+                    std::process::exit(1);
+                }
+            };
+            match serde_json::from_slice(&c_str[..]) {
+                Ok(c) => c,
+                Err(e) => {
+                    println!("invalid config: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        None =>  {
+            config::Config::default()
+        }
     };
-    let audio = AudioStream::init(audio_config);
+
+    let audio = AudioStream::init(config.audio.clone());
     let audio_ev = audio.get_event_sender();
 
     // streaming audio using cpal to audiostream
@@ -61,6 +96,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let color_modes: Vec<config::Color> = vec![
         config::Color::Rgb([0, 255, 0]),
+        config::Color::Rgb([255, 255, 255]),
         config::Color::Rgb([0, 0, 255]),
         config::Color::Rgb([255, 0, 50]),
         config::Color::Rgb([127, 0, 255]),

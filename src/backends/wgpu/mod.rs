@@ -17,7 +17,7 @@ use std::sync::mpsc;
 
 
 pub const PIXEL_WIDTH: u16 = 18;
-pub const PIXEL_HEIGHT: u16 = 36;
+pub const PIXEL_HEIGHT: u16 = 18;
 
 pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> Result<(), Box<dyn Error>> {
     let audio_ev = audio.get_event_sender();

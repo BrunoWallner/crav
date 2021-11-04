@@ -6,6 +6,7 @@ use crate::config::Color;
 use crate::config::Width;
 
 use std::{io::BufWriter};
+use std::time::Duration;
 use termion::event::Key;
 use std::error::Error;
 
@@ -21,7 +22,7 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
     write!(screen, "{}", termion::cursor::Hide)?;
     write!(screen, "{}", termion::clear::All)?;
 
-    let ev = events::EventHandler::new(config.tick_rate);
+    let ev = events::EventHandler::new(Duration::from_millis(1000 / config.fps));
 
 
     let (mut width, mut height) = termion::terminal_size().unwrap();

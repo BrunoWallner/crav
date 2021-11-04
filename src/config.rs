@@ -1,34 +1,27 @@
-use std::time::Duration;
 use std::f32::consts::PI;
 
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub tick_rate: Duration,
-    pub volume: f32,
-    pub max_frequency: u16,
-    pub fft_resolution: u16,
-    pub smoothing_size: u16,
-    pub smoothing_amount: u16,
-    pub buffering: u16,
+    pub audio: audioviz::Config,
+    pub fps: u64,
     pub color: Color,
     pub width: Width,
 }
 impl Default for Config {
     fn default() -> Self {
         Config {
-            tick_rate: Duration::from_millis(16),
-            volume: 5.0,
-            max_frequency: 10_000,
-            fft_resolution: 6000,
-            smoothing_size: 2,
-            smoothing_amount: 3,
-            buffering: 7,
+            audio: audioviz::Config::default(),
+            fps: 60,
             color: Color::Rainbow,
             width: Width::Half,
         }
     }
 }
 
+#[derive(Serialize, Deserialize)]
 #[derive(Debug, Clone, Copy)]
 pub enum Color {
     Rainbow,
@@ -45,6 +38,7 @@ impl Color {
     } 
 }
 
+#[derive(Serialize, Deserialize)]
 #[derive(Debug, Clone, Copy)]
 pub enum Width {
     Full,

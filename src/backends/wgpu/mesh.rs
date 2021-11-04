@@ -25,8 +25,8 @@ pub fn from_buffer(
     );
 
     let width = match config.width {
-        Width::Half => PIXEL_WIDTH as f32 / window_size.0 as f32 * 1.0,
-        Width::Full => PIXEL_WIDTH as f32 / window_size.0 as f32 * 2.1, // to compensate for some odd spacing
+        Width::Half => 1.0 / w as f32,
+        Width::Full => 1.0 / w as f32 * 2.0,
     };
 
     for y in 0..h as usize {
