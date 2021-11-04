@@ -6,7 +6,7 @@ It can run in the terminal but also has a 3D accelerated backend implemented in 
 Is currently only able to be compiled on Linux, but I will add a crossterm backend in the near future.
 
 ## demo
-![](/media/demo.gif)
+![](/media/demo.png)
 
 ## Keyboard shortcuts
 * `c` cycles between colors
