@@ -1,7 +1,7 @@
-mod wgpu_abstraction;
+mod state;
 mod mesh;
 
-use wgpu_abstraction::Vertex;
+use state::Vertex;
 
 use std::error::Error;
 use crate::config::{Config, Color, Width};
@@ -24,7 +24,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
-    let mut state = pollster::block_on(wgpu_abstraction::State::new(&window, audio, config.clone() ));
+    let mut state = pollster::block_on(state::State::new(&window, audio, config.clone() ));
 
     let cm = color_modes.into_iter();
     let mut color_modes = cm.cycle();
