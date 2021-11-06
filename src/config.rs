@@ -9,6 +9,7 @@ pub struct Config {
     pub fps: u64,
     pub color: Color,
     pub width: Width,
+    pub mirror: bool,
 }
 impl Default for Config {
     fn default() -> Self {
@@ -17,6 +18,7 @@ impl Default for Config {
             fps: 60,
             color: Color::Rainbow,
             width: Width::Half,
+            mirror: false,
         }
     }
 }

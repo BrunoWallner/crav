@@ -62,6 +62,35 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
                     Width::Half => Width::Full, 
                 }
             }
+            if input.key_pressed(VirtualKeyCode::B) {
+                let (tx, rx) = mpsc::channel();
+                audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
+                let cfg = rx.recv().unwrap();
+                
+                //input.update(&event);
+                if input.key_held(VirtualKeyCode::LShift) {
+                    let config = audioviz::Config {
+                        buffering: cfg.buffering + 1,
+                        ..cfg
+                    };
+                    audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
+                } else {
+                    if cfg.buffering >= 2 {
+                        let config = audioviz::Config {
+                            buffering: cfg.buffering - 1,
+                            ..cfg
+                        };
+                        audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
+                    }
+                }
+            }
+            if input.key_pressed(VirtualKeyCode::M) {
+                state.config.mirror = !state.config.mirror;
+
+                let mut bar_number = state.size.width as usize / PIXEL_WIDTH as usize;
+                if state.config.mirror {bar_number /= 2}
+                state.audio.set_bar_number(bar_number);
+            }
         }
 
 

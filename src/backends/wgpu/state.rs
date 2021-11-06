@@ -3,9 +3,7 @@ use wgpu::util::DeviceExt;
 
 use crate::config::Config;
 
-use crate::backends::wgpu::mesh;
-
-use crate::backends::wgpu::{PIXEL_WIDTH};
+use crate::backends::wgpu::{PIXEL_WIDTH, mesh};
 
 
 #[repr(C)]
@@ -45,7 +43,7 @@ pub struct State {
     vertex_buffer: wgpu::Buffer,
     num_indices: u32,
     index_buffer: wgpu::Buffer,
-    audio: audioviz::AudioStream,
+    pub audio: audioviz::AudioStream,
     pub config: Config,
 }
 
@@ -54,7 +52,9 @@ impl State {
     pub async fn new(window: &Window, audio: audioviz::AudioStream, config: Config) -> Self {
         let size = window.inner_size();
 
-        audio.set_bar_number( size.width as usize / PIXEL_WIDTH as usize / 2);
+        let mut bar_number = size.width as usize / PIXEL_WIDTH as usize;
+        if config.mirror {bar_number /= 2}
+        audio.set_bar_number(bar_number);
 
         // The instance is a handle to our GPU
         // BackendBit::PRIMARY => Vulkan + Metal + DX12 + Browser WebGPU
@@ -178,7 +178,9 @@ impl State {
             self.surface_config.height = new_size.height;
             self.surface.configure(&self.device, &self.surface_config);
 
-            self.audio.set_bar_number( self.size.width as usize / PIXEL_WIDTH as usize / 2 );
+            let mut bar_number = self.size.width as usize / PIXEL_WIDTH as usize;
+            if self.config.mirror {bar_number /= 2}
+            self.audio.set_bar_number(bar_number);
         }
     }
 
@@ -189,11 +191,10 @@ impl State {
     pub fn update(&mut self) {
         let mut buffer = self.audio.get_audio_data();
 
-        //buffer.drain((buffer.len() - 50)..buffer.len());
-        //buffer.drain(0..10);
-
-        for i in 0..buffer.len() {
-            buffer.insert(0, buffer[i*2]);
+        if self.config.mirror {
+            for i in 0..buffer.len() {
+                buffer.insert(0, buffer[i*2]);
+            }
         }
 
         let (vertices, indices) = mesh::from_buffer(

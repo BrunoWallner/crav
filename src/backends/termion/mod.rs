@@ -26,11 +26,15 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
 
 
     let (mut width, mut height) = termion::terminal_size().unwrap();
-    audio.set_bar_number( (width as f32 * 0.25) as usize );
+    let mut bar_number =  (width as f32 * 0.5) as usize;
+    if config.mirror {bar_number /= 2}
+    audio.set_bar_number(bar_number);
     'main: loop {
         let mut data = audio.get_audio_data();
-        for i in 0..data.len() {
-            data.insert(0, data[i * 2]);
+        if config.mirror {
+            for i in 0..data.len() {
+                data.insert(0, data[i * 2]);
+            }
         }
 
         let mut screen = BufWriter::new(screen.lock());
@@ -45,6 +49,12 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
                 Key::Char('c') => config.color = *color_modes.next().unwrap(),
                 Key::Char('+') => audio.adjust_volume(1.1),
                 Key::Char('-') => audio.adjust_volume(0.9),
+                Key::Char('m') => {
+                    config.mirror = !config.mirror;
+                    let mut bar_number =  (width as f32 * 0.5) as usize;
+                    if config.mirror {bar_number /= 2}
+                    audio.set_bar_number(bar_number);
+                },
                 Key::Char('w') => {
                     config.width = match config.width {
                         Width::Full => Width::Half,
@@ -54,7 +64,9 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
                 _ => (),
             }
             events::Event::Resize( (w, h)) => {
-                audio.set_bar_number( (w as f32 * 0.25) as usize);
+                let mut bar_number =  (w as f32 * 0.5) as usize;
+                if config.mirror {bar_number /= 2}
+                audio.set_bar_number(bar_number);
                 write!(screen, "{}", termion::clear::All)?;
 
                 width = w;

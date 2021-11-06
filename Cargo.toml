@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# audioviz = { path = "../audioviz" }
-audioviz = "0.3.0"
+audioviz = { path = "../audioviz" }
+# audioviz = "0.3.0"
 cpal = "0.13.4"
 gag = "1.0.0"
 clap = "2.33.3"

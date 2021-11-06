@@ -1,34 +1,24 @@
 {
   "audio": {
-    "buffering": 15,
-    "smoothing_size": 3,
-    "smoothing_amount": 3,
+    "buffering": 6,
+    "smoothing_size": 10,
+    "smoothing_amount": 5,
     "fft_resolution": 8192,
     "refresh_rate": 60,
     "bar_count": 200,
-    "max_frequency": 5000,
+    "frequency_bounds": [
+      30,
+      15000
+    ],
     "volume": 1.0,
-    "volume_normalisation": "Exponential",
-    "_example_manual_volume_normalisation": {
-      "Manual": [
-        0.05,
-        0.15,
-        1.0,
-        1.25,
-        2.5
-      ]
+    "volume_normalisation": {
+      "Linear": 0.8
     },
     "pre_fft_buffer_cutoff": 0.33,
-    "distribution": 0.5
+    "distribution": 0.75
   },
   "fps": 60,
   "color": "Rainbow",
-  "_example_rgb_color": {
-    "Rgb": [
-      255,
-      255,
-      255
-    ]
-  },
-  "width": "Half"
+  "width": "Half",
+  "mirror": false
 }
