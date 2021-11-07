@@ -30,14 +30,15 @@ pub fn from_buffer(
     };
 
     for y in 0..h as usize {
-        let color: [f32; 3] = match config.color {
+        let color_clone = config.color.clone();
+        let color: [f32; 3] = match color_clone {
             Color::Rgb(c) => [ 
                     (c[0] as f32 / 255.0).powf(2.2),
                     (c[1] as f32 / 255.0).powf(2.2),
                     (c[2] as f32 / 255.0).powf(2.2),
                 ],
-            Color::Rainbow => {
-                let c = Color::rainbow_from_y(y as f32 / h as f32);
+            c => {
+                let c = c.to_rgb(y as f32 / h as f32);
                 [ 
                     (c[0] as f32 / 255.0).powf(2.2),
                     (c[1] as f32 / 255.0).powf(2.2),

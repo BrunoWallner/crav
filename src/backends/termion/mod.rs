@@ -15,7 +15,8 @@ use termion::screen::AlternateScreen;
 use std::io::{Write, stdout};
 
 pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> Result<(), Box<dyn Error>> {
-    let mut color_modes = color_modes.iter().cycle();
+    let cm = color_modes.into_iter();
+    let mut color_modes = cm.cycle();
 
     let raw = stdout().into_raw_mode()?;
     let mut screen = AlternateScreen::from(raw);
@@ -39,14 +40,14 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
 
         let mut screen = BufWriter::new(screen.lock());
 
-        bars::draw(&data, &mut screen, [width, height], config.color, config.width)?;
+        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width)?;
 
         screen.flush()?;
 
         match ev.get().unwrap() {
             events::Event::Input(input) => match input {
                 Key::Char('q') => break 'main,
-                Key::Char('c') => config.color = *color_modes.next().unwrap(),
+                Key::Char('c') => config.color = color_modes.next().unwrap(),
                 Key::Char('+') => audio.adjust_volume(1.1),
                 Key::Char('-') => audio.adjust_volume(0.9),
                 Key::Char('m') => {
@@ -60,7 +61,26 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
                         Width::Full => Width::Half,
                         Width::Half => Width::Full, 
                     }
-                }
+                },
+                Key::Char('b') => {
+                    let cfg = audio.get_config();
+                    if cfg.buffering >= 2 {
+                        let config = audioviz::Config {
+                            buffering: cfg.buffering - 1,
+                            ..cfg
+                        };
+                        audio.set_config(config);
+                    }
+                },
+                Key::Char('B') => {
+                    let cfg = audio.get_config();
+                    let config = audioviz::Config {
+                        buffering: cfg.buffering + 1,
+                        ..cfg
+                    };
+                    audio.set_config(config);
+                },
+
                 _ => (),
             }
             events::Event::Resize( (w, h)) => {

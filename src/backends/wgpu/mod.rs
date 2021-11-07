@@ -23,7 +23,10 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
     let audio_ev = audio.get_event_sender();
 
     let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
+    let window = WindowBuilder::new()
+        .with_transparent(true)
+        .build(&event_loop)
+        .unwrap();
     let mut state = pollster::block_on(state::State::new(&window, audio, config.clone() ));
 
     let cm = color_modes.into_iter();

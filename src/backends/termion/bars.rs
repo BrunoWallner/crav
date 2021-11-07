@@ -39,10 +39,10 @@ fn get_lines(width: u16, height: u16, grid: Vec<Vec<u8>>, color: Color, w: Width
                 }
             }
         }
-        Color::Rainbow => {
+        c => {
             for y in 0..height as usize {
                 let ry: f32 = y as f32 / height as f32;
-                let color = Color::rainbow_from_y(ry);
+                let color = c.to_rgb(ry);
                 lines[y].push_str(&format!("{}", color::Fg(color::Rgb(color[0], color[1], color[2]))));
                 for x in 0..width as usize {
                     let str = match grid[y][x] {

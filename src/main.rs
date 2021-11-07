@@ -44,11 +44,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let backend: backends::Backend = match matches.value_of("backend") {
         Some(b) => match b.to_lowercase().as_str() {
-            "termion" => backends::Backend::Termion,
-            "wgpu" => backends::Backend::Wgpu,
+            "terminal" | "t" => backends::Backend::Terminal,
+            "wgpu" | "w" => backends::Backend::Wgpu,
             _ => panic!("invalid backend")
         }
-        None => backends::Backend::Termion,
+        None => backends::Backend::Terminal,
     };
 
     if matches.is_present("print_config") {
@@ -104,7 +104,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         config::Color::Rgb([0, 255, 255]),
         config::Color::Rgb([255, 0, 255]),
         config::Color::Rgb([255, 0, 0]),
-        config::Color::Rainbow,
     ];
 
     backend.run(&mut config, audio, color_modes);

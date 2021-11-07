@@ -5,13 +5,13 @@ mod termion;
 mod wgpu;
 
 pub enum Backend {
-    Termion,
+    Terminal,
     Wgpu,
 }
 impl Backend {
     pub fn run(&self, config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
         match self {
-            Backend::Termion => {
+            Backend::Terminal => {
                 termion::run(config, audio,  color_modes).unwrap();
             }
             Backend::Wgpu => {

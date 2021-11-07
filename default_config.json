@@ -1,24 +1,42 @@
 {
   "audio": {
-    "buffering": 6,
+    "buffering": 7,
     "smoothing_size": 10,
-    "smoothing_amount": 5,
+    "smoothing_amount": 10,
     "fft_resolution": 8192,
-    "refresh_rate": 60,
+    "refresh_rate": 120,
     "bar_count": 200,
     "frequency_bounds": [
-      30,
-      15000
+      25,
+      5000
     ],
     "volume": 1.0,
     "volume_normalisation": {
-      "Linear": 0.8
+      "Linear": 0.75
     },
     "pre_fft_buffer_cutoff": 0.33,
     "distribution": 0.75
   },
   "fps": 60,
-  "color": "Rainbow",
+  "color": {
+    "Gradient": [
+      [
+        82,
+        168,
+        255
+      ],
+      [
+        28,
+        58,
+        255
+      ],
+      [
+        126,
+        28,
+        255
+      ]
+    ]
+  },
   "width": "Half",
   "mirror": false
 }
