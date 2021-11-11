@@ -1,5 +1,5 @@
 use crate::backends::wgpu::Vertex;
-use crate::config::{Config, Color, Width};
+use crate::config::{Config, Color};
 use crate::backends::gen_grid;
 
 use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT};
@@ -24,10 +24,7 @@ pub fn from_buffer(
         &buffer, 
     );
 
-    let width = match config.width {
-        Width::Half => 1.0 / w as f32,
-        Width::Full => 1.0 / w as f32 * 2.0,
-    };
+    let width: f32 = 1.0 / w as f32 * config.width as f32;
 
     for y in 0..h as usize {
         let color_clone = config.color.clone();

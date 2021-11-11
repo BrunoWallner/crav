@@ -37,3 +37,8 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<f32>) -> Vec<Vec<u8>> {
     }
     buffer
 }
+
+pub fn get_bar_number(width: u8, spacing: u8, screen_width: u16) -> usize {
+    if width == 0 {return 1}
+    (screen_width / (width + spacing) as u16) as usize
+}

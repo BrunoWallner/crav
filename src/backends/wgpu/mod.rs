@@ -4,7 +4,7 @@ mod mesh;
 use state::Vertex;
 
 use std::error::Error;
-use crate::config::{Config, Color, Width};
+use crate::config::{Config, Color};
 
 use winit::{
     event::*,
@@ -58,34 +58,6 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
                     ..cfg
                 };
                 audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
-            }
-            if input.key_pressed(VirtualKeyCode::W) {
-                state.config.width = match state.config.width {
-                    Width::Full => Width::Half,
-                    Width::Half => Width::Full, 
-                }
-            }
-            if input.key_pressed(VirtualKeyCode::B) {
-                let (tx, rx) = mpsc::channel();
-                audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
-                let cfg = rx.recv().unwrap();
-                
-                //input.update(&event);
-                if input.key_held(VirtualKeyCode::LShift) {
-                    let config = audioviz::Config {
-                        buffering: cfg.buffering + 1,
-                        ..cfg
-                    };
-                    audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
-                } else {
-                    if cfg.buffering >= 2 {
-                        let config = audioviz::Config {
-                            buffering: cfg.buffering - 1,
-                            ..cfg
-                        };
-                        audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
-                    }
-                }
             }
             if input.key_pressed(VirtualKeyCode::M) {
                 state.config.mirror = !state.config.mirror;

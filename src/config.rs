@@ -7,7 +7,8 @@ pub struct Config {
     pub audio: audioviz::Config,
     pub fps: u64,
     pub color: Color,
-    pub width: Width,
+    pub width: u8,
+    pub spacing: u8,
     pub mirror: bool,
 }
 impl Default for Config {
@@ -16,7 +17,8 @@ impl Default for Config {
             audio: audioviz::Config::default(),
             fps: 60,
             color: Color::Gradient(vec![ [255, 0, 0], [0, 255, 0], [0, 0, 255] ]),
-            width: Width::Half,
+            width: 4,
+            spacing: 1,
             mirror: false,
         }
     }
@@ -65,10 +67,3 @@ impl Color {
 ((ry + (4.0 * PI)).sin() * 230.0) as u8 + 25,
 
 */
-
-#[derive(Serialize, Deserialize)]
-#[derive(Debug, Clone, Copy)]
-pub enum Width {
-    Full,
-    Half,
-}
