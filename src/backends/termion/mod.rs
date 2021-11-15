@@ -27,7 +27,7 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
 
 
     let (mut width, mut height) = termion::terminal_size().unwrap();
-    let mut bar_number =  (width as f32 * 0.5) as usize;
+    let mut bar_number =  width as usize;
     if config.mirror {bar_number /= 2}
     audio.set_bar_number(bar_number);
     'main: loop {
@@ -51,22 +51,24 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
                 Key::Char('+') => audio.adjust_volume(1.1),
                 Key::Char('-') => audio.adjust_volume(0.9),
                 Key::Char('m') => {
+                    let mut bar_number = get_bar_number(config.width, config.spacing, width);
                     config.mirror = !config.mirror;
-                    let mut bar_number: usize = get_bar_number(config.width, config.spacing, width);
-                    if config.mirror {bar_number /= 2}
+                    if config.mirror {
+                        bar_number /= 2
+                    }
                     audio.set_bar_number(bar_number);
                 },
 
                 _ => (),
             }
             events::Event::Resize( (w, h)) => {
+                width = w;
+                height = h;
+
                 let mut bar_number: usize = get_bar_number(config.width, config.spacing, w);
                 if config.mirror {bar_number /= 2}
                 audio.set_bar_number(bar_number);
                 write!(screen, "{}", termion::clear::All)?;
-
-                width = w;
-                height = h;
             }
             _ => (),
         }

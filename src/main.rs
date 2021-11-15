@@ -89,7 +89,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // streaming audio using cpal to audiostream
     let audio_ev_clone = audio_ev.clone();
     std::thread::spawn(move || loop {
-        //let _gag = Gag::stderr().unwrap();
+        let _gag = Gag::stderr().unwrap();
         let _stream = audio::stream_audio(audio_ev_clone.clone(), audio::AudioDevice::Output(0));
         std::thread::park();
     });
