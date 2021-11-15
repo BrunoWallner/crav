@@ -1,9 +1,8 @@
 use crate::backends::wgpu::Vertex;
 use crate::config::{Config, Color};
-use crate::backends::gen_grid;
+use crate::backends::{gen_grid};
 
 use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT};
-use crate::backends::get_bar_number;
 
 pub fn from_buffer(
     buffer: Vec<f32>,
@@ -11,7 +10,9 @@ pub fn from_buffer(
     window_size: (u32, u32),
 ) -> (Vec<Vertex>, Vec<u32>)  {
     let (w, h) = ( (window_size.0 / PIXEL_WIDTH as u32) as u16, (window_size.1 / PIXEL_HEIGHT as u32) as u16 );
-    let width = 1.0 /  get_bar_number(config.width, config.spacing, w) as f32;
+    let width = 1.0 / w as f32 * config.width as f32 * 2.0; // * 2.0 because wgpu goes from -1 to 1
+
+    //let w: u16 = get_bar_number(config.width, config.spacing, w) as u16; // calculates width further
 
     let mut vertices: Vec<Vertex> = Vec::new();
     let mut indices: Vec<u32> = Vec::new();
@@ -48,7 +49,8 @@ pub fn from_buffer(
             if grid[y][x] > 0 && grid[y][x] <= 8 {
                 let p = grid[y][x] as f32 * (1.0 / h as f32) / 8.0 * 2.0;
 
-                let x = x as f32 / w as f32 * 2.0 - 1.0;
+                let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)
+                    * 2.0 - 1.0; // because wgpu goes from -1 to 1
                 let y = y as f32 / h as f32 * 2.0 - 1.0;
     
                 vertices.push(Vertex { position: [x,  y, 0.0],   color});

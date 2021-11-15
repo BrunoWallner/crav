@@ -27,9 +27,11 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
 
 
     let (mut width, mut height) = termion::terminal_size().unwrap();
-    let mut bar_number =  width as usize;
+
+    let mut bar_number: usize = get_bar_number(config.width, config.spacing, width);
     if config.mirror {bar_number /= 2}
     audio.set_bar_number(bar_number);
+
     'main: loop {
         let mut data = audio.get_audio_data();
         if config.mirror {

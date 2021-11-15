@@ -4,6 +4,7 @@ use wgpu::util::DeviceExt;
 use crate::config::Config;
 
 use crate::backends::wgpu::{PIXEL_WIDTH, mesh};
+use crate::backends::{get_bar_number};
 
 
 #[repr(C)]
@@ -52,7 +53,8 @@ impl State {
     pub async fn new(window: &Window, audio: audioviz::AudioStream, config: Config) -> Self {
         let size = window.inner_size();
 
-        let mut bar_number = size.width as usize / PIXEL_WIDTH as usize;
+        let screen_width = size.width as u16 / PIXEL_WIDTH;
+        let mut bar_number = get_bar_number(config.width, config.spacing, screen_width) as usize;
         if config.mirror {bar_number /= 2}
         audio.set_bar_number(bar_number);
 
@@ -178,7 +180,8 @@ impl State {
             self.surface_config.height = new_size.height;
             self.surface.configure(&self.device, &self.surface_config);
 
-            let mut bar_number = self.size.width as usize / PIXEL_WIDTH as usize;
+            let screen_width = self.size.width as u16 / PIXEL_WIDTH;
+            let mut bar_number = get_bar_number(self.config.width, self.config.spacing, screen_width) as usize;
             if self.config.mirror {bar_number /= 2}
             self.audio.set_bar_number(bar_number);
         }

@@ -42,9 +42,9 @@ impl Color {
 
                 let step: f32 = 1.0_f32 / g.len() as f32;
                 for (i, color) in g.iter().enumerate() {
-                    r_points.push(Key::new( (i + 1) as f32 * step, color[0] as f32, Interpolation::Linear ));
-                    g_points.push(Key::new( (i + 1) as f32 * step, color[1] as f32, Interpolation::Linear ));
-                    b_points.push(Key::new( (i + 1) as f32 * step, color[2] as f32, Interpolation::Linear ));
+                    r_points.push(Key::new( (i as f32 + step) * step, color[0] as f32, Interpolation::Linear ));
+                    g_points.push(Key::new( (i as f32 + step) * step, color[1] as f32, Interpolation::Linear ));
+                    b_points.push(Key::new( (i as f32 + step) * step, color[2] as f32, Interpolation::Linear ));
                 }
                 let r_spline = Spline::from_vec(r_points);
                 let g_spline = Spline::from_vec(g_points);

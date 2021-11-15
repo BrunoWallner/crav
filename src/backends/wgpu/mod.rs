@@ -2,8 +2,8 @@ mod state;
 mod mesh;
 
 use state::Vertex;
+use crate::backends::get_bar_number;
 
-use std::error::Error;
 use crate::config::{Config, Color};
 
 use winit::{
@@ -16,10 +16,10 @@ use winit_input_helper::WinitInputHelper;
 use std::sync::mpsc;
 
 
-pub const PIXEL_WIDTH: u16 = 18;
+pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> Result<(), Box<dyn Error>> {
+pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> ! {
     let audio_ev = audio.get_event_sender();
 
     let event_loop = EventLoop::new();
@@ -33,7 +33,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
     let mut color_modes = cm.cycle();
 
     let mut input = WinitInputHelper::new();
-
+    let config = config.clone();
     event_loop.run(move |event, _, control_flow| {
         if input.update(&event) {
             if input.key_pressed(VirtualKeyCode::C) {
@@ -62,7 +62,8 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
             if input.key_pressed(VirtualKeyCode::M) {
                 state.config.mirror = !state.config.mirror;
 
-                let mut bar_number = state.size.width as usize / PIXEL_WIDTH as usize;
+                let screen_width = state.size.width as u16 / PIXEL_WIDTH;
+                let mut bar_number = get_bar_number(config.width, config.spacing, screen_width) as usize;
                 if state.config.mirror {bar_number /= 2}
                 state.audio.set_bar_number(bar_number);
             }

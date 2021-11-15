@@ -3,17 +3,17 @@
     "smoothing_size": 0,
     "smoothing_amount": 0,
     "fft_resolution": 8128,
-    "refresh_rate": 60,
+    "refresh_rate": 120,
     "bar_count": 200,
     "frequency_bounds": [
-      20,
+      30,
       10000
     ],
     "volume": 1.0,
     "volume_normalisation": {
-      "Linear": 0.5
+      "Linear": 0.75
     },
-    "pre_fft_buffer_cutoff": 0.33,
+    "pre_fft_buffer_cutoff": 0.2,
     "eq": [
       1.0,
       1.0,
@@ -28,22 +28,22 @@
     "Gradient": [
       [
         255,
-        0,
-        0
-      ],
-      [
-        0,
         255,
-        0
+        255
       ],
       [
-        0,
-        0,
-        255
+        255,
+        128,
+        128
+      ],
+      [
+        255,
+        64,
+        64
       ]
     ]
   },
-  "width": 1,
-  "spacing": 0,
+  "width": 2,
+  "spacing": 1,
   "mirror": false
 }

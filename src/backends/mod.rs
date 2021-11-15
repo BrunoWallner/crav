@@ -15,7 +15,7 @@ impl Backend {
                 termion::run(config, audio,  color_modes).unwrap();
             }
             Backend::Wgpu => {
-                wgpu::run(config, audio, color_modes).unwrap();
+                wgpu::run(config, audio, color_modes);
             }
         }
     }
