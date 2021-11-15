@@ -20,7 +20,7 @@
       1.0,
       1.0
     ],
-    "gravity": 1.0,
+    "gravity": 2.0,
     "buffering": 1
   },
   "fps": 60,
@@ -45,5 +45,10 @@
   },
   "width": 2,
   "spacing": 1,
-  "mirror": false
+  "mirror": false,
+  "wgpu": {
+    "transparent": false,
+    "fullscreen": false,
+    "decoration": true
+  }
 }

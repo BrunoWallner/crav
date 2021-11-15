@@ -10,6 +10,7 @@ use winit::{
     event::*,
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
+    window::Fullscreen,
 };
 use winit_input_helper::WinitInputHelper;
 
@@ -24,9 +25,16 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
 
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
-        .with_transparent(true)
+        .with_transparent(config.wgpu.transparent)
+        .with_decorations(config.wgpu.decoration)
+        .with_title("crav")
         .build(&event_loop)
         .unwrap();
+
+    if config.wgpu.fullscreen {
+        window.set_fullscreen(Some(Fullscreen::Borderless(None)));
+    }
+
     let mut state = pollster::block_on(state::State::new(&window, audio, config.clone() ));
 
     let cm = color_modes.into_iter();

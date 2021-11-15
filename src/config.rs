@@ -10,6 +10,7 @@ pub struct Config {
     pub width: u8,
     pub spacing: u8,
     pub mirror: bool,
+    pub wgpu: WgpuConfig,
 }
 impl Default for Config {
     fn default() -> Self {
@@ -20,6 +21,7 @@ impl Default for Config {
             width: 2,
             spacing: 1,
             mirror: false,
+            wgpu: WgpuConfig::default(),
         }
     }
 }
@@ -60,6 +62,25 @@ impl Color {
         }
     }
 }
+
+#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone)]
+pub struct WgpuConfig {
+    pub transparent: bool,
+    pub fullscreen: bool,
+    pub decoration: bool,
+}
+impl Default for WgpuConfig {
+    fn default() -> Self {
+        WgpuConfig {
+            transparent: false,
+            fullscreen: false,
+            decoration: true,
+        }
+    }
+}
+
+
 /* cool sort of crt effect
 
 ((ry).sin() * 230.0) as u8 + 25,

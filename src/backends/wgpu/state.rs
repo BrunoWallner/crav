@@ -245,7 +245,11 @@ impl State {
                         resolve_target: None,
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(
-                                wgpu::Color::TRANSPARENT
+                                if self.config.wgpu.transparent {    
+                                    wgpu::Color::TRANSPARENT
+                                } else {
+                                    wgpu::Color::BLACK
+                                }
                             ),
                             store: false,
                         }
