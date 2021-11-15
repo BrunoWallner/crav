@@ -1,7 +1,18 @@
 use crate::config::Config;
 use crate::config::Color;
 
+// IDK how to only use 1 #[cfg] per target_family but this should work at least fine
+#[cfg(target_family = "unix")]
 mod termion;
+#[cfg(target_family = "unix")]
+use self::termion as terminal;
+
+#[cfg(target_family = "windows")]
+mod crossterm;
+#[cfg(target_family = "windows")]
+use self::crossterm as terminal;
+
+
 mod wgpu;
 
 pub enum Backend {
@@ -12,7 +23,7 @@ impl Backend {
     pub fn run(&self, config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
         match self {
             Backend::Terminal => {
-                termion::run(config, audio,  color_modes).unwrap();
+                terminal::run(config, audio,  color_modes).unwrap();
             }
             Backend::Wgpu => {
                 wgpu::run(config, audio, color_modes);

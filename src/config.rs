@@ -17,7 +17,7 @@ impl Default for Config {
             audio: audioviz::Config::default(),
             fps: 60,
             color: Color::Gradient(vec![ [255, 0, 0], [0, 255, 0], [0, 0, 255] ]),
-            width: 4,
+            width: 2,
             spacing: 1,
             mirror: false,
         }
