@@ -23,7 +23,7 @@ impl Backend {
     pub fn run(&self, config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
         match self {
             Backend::Terminal => {
-                terminal::run(config, audio,  color_modes).unwrap();
+                terminal::run(config, audio,  color_modes);
             }
             Backend::Wgpu => {
                 wgpu::run(config, audio, color_modes);

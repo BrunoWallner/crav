@@ -3,7 +3,7 @@
     "smoothing_size": 0,
     "smoothing_amount": 0,
     "fft_resolution": 8128,
-    "refresh_rate": 120,
+    "refresh_rate": 60,
     "bar_count": 200,
     "frequency_bounds": [
       30,
@@ -13,7 +13,7 @@
     "volume_normalisation": {
       "Linear": 0.75
     },
-    "pre_fft_buffer_cutoff": 0.2,
+    "pre_fft_buffer_cutoff": 0.3,
     "eq": [
       1.0,
       1.0,

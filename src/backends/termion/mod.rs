@@ -8,20 +8,19 @@ use crate::config::Color;
 use std::{io::BufWriter};
 use std::time::Duration;
 use termion::event::Key;
-use std::error::Error;
 
 use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
 use std::io::{Write, stdout};
 
-pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> Result<(), Box<dyn Error>> {
+pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> ! {
     let cm = color_modes.into_iter();
     let mut color_modes = cm.cycle();
 
-    let raw = stdout().into_raw_mode()?;
+    let raw = stdout().into_raw_mode().unwrap();
     let mut screen = AlternateScreen::from(raw);
-    write!(screen, "{}", termion::cursor::Hide)?;
-    write!(screen, "{}", termion::clear::All)?;
+    write!(screen, "{}", termion::cursor::Hide).unwrap();
+    write!(screen, "{}", termion::clear::All).unwrap();
 
     let ev = events::EventHandler::new(Duration::from_millis(1000 / config.fps));
 
@@ -42,9 +41,9 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
 
         let mut screen = BufWriter::new(screen.lock());
 
-        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing)?;
+        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing).unwrap();
 
-        screen.flush()?;
+        screen.flush().unwrap();
 
         match ev.get().unwrap() {
             events::Event::Input(input) => match input {
@@ -70,11 +69,10 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
                 let mut bar_number: usize = get_bar_number(config.width, config.spacing, w);
                 if config.mirror {bar_number /= 2}
                 audio.set_bar_number(bar_number);
-                write!(screen, "{}", termion::clear::All)?;
+                write!(screen, "{}", termion::clear::All).unwrap();
             }
             _ => (),
         }
     }
-
-    Ok(())
+    std::process::exit(0);
 }

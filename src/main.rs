@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let backend: backends::Backend = match matches.value_of("backend") {
         Some(b) => match b.to_lowercase().as_str() {
-            "terminal" | "t" => backends::Backend::Terminal,
+            "terminal" | "t" | "term" => backends::Backend::Terminal,
             "wgpu" | "w" => backends::Backend::Wgpu,
             _ => panic!("invalid backend")
         }
@@ -87,10 +87,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let audio_ev = audio.get_event_sender();
 
     // streaming audio using cpal to audiostream
-    let audio_ev_clone = audio_ev.clone();
     std::thread::spawn(move || loop {
         let _gag = Gag::stderr().unwrap();
-        let _stream = audio::stream_audio(audio_ev_clone.clone(), audio::AudioDevice::Output(0));
+        let _stream = audio::stream_audio(audio_ev.clone(), audio::AudioDevice::Output(0));
         std::thread::park();
     });
 

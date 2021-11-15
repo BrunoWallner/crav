@@ -56,12 +56,12 @@ fn u8_to_string(u8: u8, width: u8, spacing: u8) -> String {
 
     // width
     for _ in 1..width {
-        string.push_str(&str);
+        string.push_str(str);
     };
 
     // spacing
     for _ in 0..spacing {
-        string.push_str(" ");
+        string.push(' ');
     };
 
     string

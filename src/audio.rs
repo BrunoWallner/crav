@@ -8,38 +8,9 @@ pub enum AudioDevice {
     Input(usize),
     Output(usize),
 }
-impl PartialEq for AudioDevice {
-    fn eq(&self, other: &Self) -> bool {
-        match *self {
-            AudioDevice::Input(a) => {
-                match *other {
-                    AudioDevice::Input(b) => {
-                        return a == b;
-                    }
-                    _ =>  {
-                        return false;
-                    }
-                }
-            },
-            AudioDevice::Output(a) => {
-                match *other {
-                    AudioDevice::Output(b) => {
-                        return a == b;
-                    }
-                    _ =>  {
-                        return false;
-                    }
-                }      
-            }
-        }
-    }
-}
-impl Eq for AudioDevice {}
 
 pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: AudioDevice) -> Result<cpal::Stream, ()> {
     //let _print_gag = Gag::stderr().unwrap();
-    let event_sender = event_sender.clone();
-
     let host = cpal::default_host();
     let input_devices = host.input_devices().unwrap().collect::<Vec<cpal::Device>>();
     let output_devices = host.output_devices().unwrap().collect::<Vec<cpal::Device>>();
