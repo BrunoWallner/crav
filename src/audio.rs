@@ -25,6 +25,7 @@ pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: A
     };
 
     //let device_config =  device.default_input_config().unwrap();
+    /*
     let device_config = match audio_device {
         AudioDevice::Input(_) => {
             device.default_input_config().unwrap()
@@ -33,7 +34,15 @@ pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: A
             device.default_output_config().unwrap()
         }
     };
+    */
+    // I dont know how increasing the number of channels both increases accuaracy AND performance but I dont complain
+    let device_config = cpal::StreamConfig {
+        channels: 1,
+        sample_rate: cpal::SampleRate(44_100),
+        buffer_size: cpal::BufferSize::Fixed(1000)
+    };
 
+    /*
     let stream = match device_config.sample_format() {
         cpal::SampleFormat::F32 => match device.build_input_stream(
             &device_config.into(),
@@ -48,6 +57,12 @@ pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: A
             return Err(());
         }
     };
+    */
+    let stream = device.build_input_stream(
+        &device_config.into(),
+        move |data, _: &_| handle_input_data_f32(data, event_sender.clone()),
+        err_fn,
+    ).unwrap();
 
     stream.play().unwrap();
 
