@@ -13,7 +13,7 @@ use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
 use std::io::{Write, stdout};
 
-pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> ! {
+pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
     let cm = color_modes.into_iter();
     let mut color_modes = cm.cycle();
 
@@ -74,5 +74,4 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
             _ => (),
         }
     }
-    std::process::exit(0);
 }

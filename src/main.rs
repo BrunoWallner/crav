@@ -107,6 +107,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     backend.run(&mut config, audio, color_modes);
 
+    println!("bye bye!");
+
 
     Ok(())
 }

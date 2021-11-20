@@ -10,7 +10,7 @@ Because It depends on `audioviz` and how I develop you need to also clone `githu
 Because of some issues on Linux with [cpal](https://github.com/RustAudio/cpal) the audio backend, I thought of using [pipewire-rs](https://gitlab.freedesktop.org/pipewire/pipewire-rs) for the Linux backend.
 
 ## demo
-![](/media/demo.png)
+![](/media/demo.gif)
 
 ## Keyboard shortcuts
 * `c` cycles between colors

@@ -1,66 +1,72 @@
 {
   "audio": {
+    "sample_rate": 44100,
     "smoothing_size": 1,
     "smoothing_amount": 1,
     "fft_resolution": 4096,
     "refresh_rate": 60,
+    "frequency_bounds": [50, 15000],
     "bar_count": 200,
-    "frequency_bounds": [
-      30,
-      10000
-    ],
     "volume": 1.0,
     "volume_normalisation": {
-      "Linear": 0.7
+      "Linear": 0.6
     },
     "eq": [
       [
-        [
-          0,
-          100
-        ],
-        200.0
+        30,
+        4.5
       ],
       [
-        [
-          100,
-          200
-        ],
-        100.0
+        150,
+        5.25
       ],
       [
-        [
-          200,
-          2500
-        ],
-        200.0
+        250,
+        2.0
+      ],
+      [
+        2000,
+        2.0
+      ],
+      [
+       5000,
+       1.0
+      ],
+      [
+       15000,
+       1.0
       ]
     ],
-    "gravity": null
+    "gravity": 2.0
   },
   "fps": 60,
   "color": {
     "Gradient": [
       [
-        255,
-        0,
-        0
-      ],
-      [
-        0,
-        255,
-        0
-      ],
-      [
-        0,
+        155,
         0,
         255
+      ],
+      [
+        0,
+        30,
+        255
+      ],
+      [
+        0,
+        255,
+        60
+      ],
+      [
+        255,
+        255,
+        0
       ]
     ]
   },
-  "width": 1,
-  "spacing": 0,
-  "mirror": true,
+  "width": 2,
+  "spacing": 1,
+  "mirror": false,
   "wgpu": {
     "transparent": false,
     "fullscreen": false,

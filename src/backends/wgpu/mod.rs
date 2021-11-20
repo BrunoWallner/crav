@@ -20,7 +20,7 @@ use std::sync::mpsc;
 pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) -> ! {
+pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
     let audio_ev = audio.get_event_sender();
 
     let event_loop = EventLoop::new();

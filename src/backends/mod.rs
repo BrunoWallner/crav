@@ -39,7 +39,7 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<f32>) -> Vec<Vec<u8>> {
             for r in 0..8 {
                 if data.len() > x {
                     let exact_y: f32 = ((y + 1) as f32 / y_size as f32) + (r as f32 * 0.125) / y_size as f32;
-                    if data[x] >= exact_y {
+                    if data[x] >= exact_y - (1.0 / y_size as f32 / 8.0) {
                         buffer[y][x] = r + 1;
                     }
                 }
