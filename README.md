@@ -3,14 +3,25 @@ Console-based Rust Audio Visualizer
 
 It can run in the terminal but also has a 3D accelerated backend implemented in wgpu.
 
-The terminal backend is currently only working on unix systems, but the wgpu backend should work fine on Windows too.
-
-Because It depends on `audioviz` and how I develop you need to also clone `github.com/BrunoWallner/audioviz` next to the `crav` folder if you want to compile it.
-
-Because of some issues on Linux with [cpal](https://github.com/RustAudio/cpal) the audio backend, I thought of using [pipewire-rs](https://gitlab.freedesktop.org/pipewire/pipewire-rs) for the Linux backend.
-
 ## demo
 ![](/media/demo.gif)
+
+## compatibility
+The terminal backend is currently only working on unix systems, but the wgpu backend should work fine on Windows too.
+
+### tested Terminals
+| terminal emulator | state             |
+| ----------------- | ----------------- |
+| gnome-terminal    | working, but slow |
+| kitty             | perfectly working |
+| alacritty         | working, but weird font |
+| tty               | working, but limited color and bar height accuracy |
+| windows-terminals | not working, but WIP |
+
+## compiling
+Because I develop this and [audioviz](https://github.com/BrunoWallner/audioviz) simultaneously you have to clone `github.com/BrunoWallner/audioviz` next to the `crav` folder if you want to compile it.
+
+In the future when audioviz has reached a semi-stable state this will not be a problem anymore.
 
 ## Keyboard shortcuts
 * `c` cycles between colors

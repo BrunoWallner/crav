@@ -17,10 +17,10 @@ impl Default for Config {
         Config {
             audio: audioviz::Config::default(),
             fps: 60,
-            color: Color::Gradient(vec![ [255, 0, 0], [0, 255, 0], [0, 0, 255] ]),
-            width: 2,
-            spacing: 1,
-            mirror: false,
+            color: Color::Gradient(vec![ [155, 0, 255], [0, 30, 255], [0, 255, 60] ]),
+            width: 1,
+            spacing: 0,
+            mirror: true,
             wgpu: WgpuConfig::default(),
         }
     }
@@ -79,12 +79,3 @@ impl Default for WgpuConfig {
         }
     }
 }
-
-
-/* cool sort of crt effect
-
-((ry).sin() * 230.0) as u8 + 25,
-((ry + (2.0 * PI)).sin() * 230.0) as u8 + 25,
-((ry + (4.0 * PI)).sin() * 230.0) as u8 + 25,
-
-*/

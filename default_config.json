@@ -14,11 +14,11 @@
     "eq": [
       [
         30,
-        4.5
+        1.5
       ],
       [
         150,
-        5.25
+        2.5
       ],
       [
         250,
@@ -64,8 +64,8 @@
       ]
     ]
   },
-  "width": 2,
-  "spacing": 1,
+  "width": 1,
+  "spacing": 0,
   "mirror": false,
   "wgpu": {
     "transparent": false,
