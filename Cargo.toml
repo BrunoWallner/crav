@@ -19,10 +19,12 @@ splines = "4.0.3"
 
 # universal wgpu backend
 winit = "0.25"
-wgpu = "0.10.0"
+wgpu = "0.11"
 bytemuck = { version = "1.4", features = [ "derive" ] }
 pollster = "0.2"
 winit_input_helper = "0.10.0"
+
+env_logger = "0.9"
 
 # termion backend for unix targets
 [target.'cfg(target_family = "unix")'.dependencies]

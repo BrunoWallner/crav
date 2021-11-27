@@ -3,7 +3,7 @@ use std::error::Error;
 mod backends;
 
 mod config;
-use audioviz::*;
+pub use audioviz::*;
 
 mod audio;
 
@@ -14,6 +14,8 @@ use clap::{Arg, App, AppSettings};
 use std::fs;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
+    
     let matches = App::new("audiovis")
     .version("0.1.0")
     .author("Luca Biendl <b.lucab1211@gmail.com>")
@@ -88,24 +90,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // streaming audio using cpal to audiostream
     std::thread::spawn(move || loop {
-        let _gag = Gag::stderr().unwrap();
+        //let _gag = Gag::stderr().unwrap();
         let _stream = audio::stream_audio(audio_ev.clone(), audio::AudioDevice::Output(0));
         std::thread::park();
     });
 
-    let color_modes: Vec<config::Color> = vec![
-        config::Color::Rgb([0, 255, 0]),
-        config::Color::Rgb([255, 255, 255]),
-        config::Color::Rgb([0, 0, 255]),
-        config::Color::Rgb([255, 0, 50]),
-        config::Color::Rgb([127, 0, 255]),
-        config::Color::Rgb([255, 255, 0]),
-        config::Color::Rgb([0, 255, 255]),
-        config::Color::Rgb([255, 0, 255]),
-        config::Color::Rgb([255, 0, 0]),
-    ];
 
-    backend.run(&mut config, audio, color_modes);
+    backend.run(&mut config, audio);
 
     println!("bye bye!");
 

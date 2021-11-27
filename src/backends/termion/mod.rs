@@ -3,7 +3,6 @@ mod events;
 
 use crate::backends::get_bar_number;
 use crate::config::Config;
-use crate::config::Color;
 
 use std::{io::BufWriter};
 use std::time::Duration;
@@ -13,10 +12,7 @@ use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
 use std::io::{Write, stdout};
 
-pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
-    let cm = color_modes.into_iter();
-    let mut color_modes = cm.cycle();
-
+pub fn run(mut config: &mut Config, audio: audioviz::AudioStream) {
     let raw = stdout().into_raw_mode().unwrap();
     let mut screen = AlternateScreen::from(raw);
     write!(screen, "{}", termion::cursor::Hide).unwrap();
@@ -35,7 +31,7 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
         let mut data = audio.get_audio_data();
         if config.mirror {
             for i in 0..data.len() {
-                data.insert(0, data[i * 2]);
+                data.insert(0, data[i * 2].clone());
             }
         }
 
@@ -48,7 +44,6 @@ pub fn run(mut config: &mut Config, audio: audioviz::AudioStream, color_modes: V
         match ev.get().unwrap() {
             events::Event::Input(input) => match input {
                 Key::Char('q') => break 'main,
-                Key::Char('c') => config.color = color_modes.next().unwrap(),
                 Key::Char('+') => audio.adjust_volume(1.1),
                 Key::Char('-') => audio.adjust_volume(0.9),
                 Key::Char('m') => {

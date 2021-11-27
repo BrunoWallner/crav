@@ -1,11 +1,11 @@
 use crate::backends::wgpu::Vertex;
 use crate::config::{Config, Color};
-use crate::backends::{gen_grid};
+use crate::backends::{gen_grid, GridPixel};
 
 use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT};
 
 pub fn from_buffer(
-    buffer: Vec<f32>,
+    buffer: Vec<audioviz::Frequency>,
     config: &Config,
     window_size: (u32, u32),
 ) -> (Vec<Vertex>, Vec<u32>)  {
@@ -46,27 +46,30 @@ pub fn from_buffer(
         };
 
         for x in 0..w as usize {
-            if grid[y][x] > 0 && grid[y][x] <= 8 {
-                let p = grid[y][x] as f32 * (1.0 / h as f32) / 8.0 * 2.0;
+            let p: f32 = match grid[y][x] {
+                GridPixel::Bar(bar_height) => {
+                    bar_height as f32 * (1.0 / h as f32) / 8.0 * 2.0
+                }
+                GridPixel::Freq(_) => 0.0
+            };
 
-                let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)
-                    * 2.0 - 1.0; // because wgpu goes from -1 to 1
-                let y = y as f32 / h as f32 * 2.0 - 1.0;
-    
-                vertices.push(Vertex { position: [x,  y, 0.0],   color});
-                vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
-    
-                vertices.push(Vertex { position: [x,  y + p, 0.0],   color});
-                vertices.push(Vertex { position: [x + width,  y + p, 0.0],   color});
-    
-                let i = vertices.len() as u32 - 4;
-                indices.push(i+0);
-                indices.push(i+3);
-                indices.push(i+2);
-                indices.push(i+0);
-                indices.push(i+1);
-                indices.push(i+3);
-            }
+            let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)
+                * 2.0 - 1.0; // because wgpu goes from -1 to 1
+            let y = y as f32 / h as f32 * 2.0 - 1.0;
+
+            vertices.push(Vertex { position: [x,  y, 0.0],   color});
+            vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
+
+            vertices.push(Vertex { position: [x,  y + p, 0.0],   color});
+            vertices.push(Vertex { position: [x + width,  y + p, 0.0],   color});
+
+            let i = vertices.len() as u32 - 4;
+            indices.push(i+0);
+            indices.push(i+3);
+            indices.push(i+2);
+            indices.push(i+0);
+            indices.push(i+1);
+            indices.push(i+3);
         }
     }
      

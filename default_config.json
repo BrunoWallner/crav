@@ -1,24 +1,24 @@
 {
   "audio": {
     "sample_rate": 44100,
-    "smoothing_size": 1,
-    "smoothing_amount": 1,
+    "smoothing_size": 0,
+    "smoothing_amount": 0,
     "fft_resolution": 4096,
     "refresh_rate": 60,
-    "frequency_bounds": [50, 15000],
+    "frequency_bounds": [40, 20000],
     "bar_count": 200,
     "volume": 1.0,
     "volume_normalisation": {
-      "Linear": 0.6
+      "Linear": 0.65
     },
     "eq": [
       [
         30,
-        1.5
+        2.0
       ],
       [
         150,
-        2.5
+        2.0
       ],
       [
         250,
@@ -26,15 +26,15 @@
       ],
       [
         2000,
-        2.0
+        1.0
       ],
       [
        5000,
-       1.0
+       0.75
       ],
       [
        15000,
-       1.0
+       0.5
       ]
     ],
     "gravity": 2.0
@@ -43,23 +43,33 @@
   "color": {
     "Gradient": [
       [
-        155,
-        0,
-        255
+        3,
+        132,
+        252
       ],
       [
-        0,
-        30,
-        255
-      ],
-      [
-        0,
-        255,
-        60
+        215,
+        3,
+        252
       ],
       [
         255,
+        0,
+        225
+      ],
+      [
         255,
+        0,
+        75
+      ],
+      [
+        255,
+        64,
+        0
+      ],
+      [
+        255,
+        120,
         0
       ]
     ]

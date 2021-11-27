@@ -3,9 +3,9 @@ use std::error::Error;
 use termion::color;
 use crate::config::Color;
 use std::io::BufWriter;
-use crate::backends::{gen_grid, get_bar_number};
+use crate::backends::{gen_grid, get_bar_number, GridPixel};
 
-fn get_lines(width: u16, height: u16, grid: Vec<Vec<u8>>, color: Color, w: u8, spacing: u8) -> Vec<String> {
+fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w: u8, spacing: u8) -> Vec<String> {
     let mut lines: Vec<String> = vec![String::new(); height as usize];
     //let calculated_width: usize = get_bar_number(w, spacing, width) * 2;
 
@@ -38,26 +38,43 @@ fn get_lines(width: u16, height: u16, grid: Vec<Vec<u8>>, color: Color, w: u8, s
     lines
 }
 
-fn u8_to_string(u8: u8, width: u8, spacing: u8) -> String {
-    let str = match u8 {
-        0 => " ",
-        8 => "█",
-        7 => "▇",
-        6 => "▆",
-        5 => "▅",
-        4 => "▄",
-        3 => "▃",
-        2 => "▂",
-        1 => "▁",      
-        _ => " ",    
+fn u8_to_string(pixel: GridPixel, width: u8, spacing: u8) -> String {
+    let str = match pixel {
+        GridPixel::Bar(b) => {
+            let pixel= match b {
+                0 => " ",
+                8 => "█",
+                7 => "▇",
+                6 => "▆",
+                5 => "▅",
+                4 => "▄",
+                3 => "▃",
+                2 => "▂",
+                1 => "▁",      
+                _ => " ",   
+            };
+            pixel.to_string()
+        }
+        GridPixel::Freq(f) => {
+            f.to_string()
+        }
     };
 
     let mut string = str.to_string();
 
     // width
-    for _ in 1..width {
-        string.push_str(str);
-    };
+    match pixel {
+        GridPixel::Bar(_) => {
+            for _ in 1..width {
+                string.push_str(&str);
+            };
+        },
+        GridPixel::Freq(_) => {
+            for _ in 1..width {
+                string.push(' ');
+            };
+        },
+    }
 
     // spacing
     for _ in 0..spacing {
@@ -68,7 +85,7 @@ fn u8_to_string(u8: u8, width: u8, spacing: u8) -> String {
 }
 
 pub fn draw(
-    data: &Vec<f32>, 
+    data: &Vec<audioviz::Frequency>, 
     screen: &mut BufWriter<StdoutLock>, 
     size: [u16; 2], 
     color: Color,

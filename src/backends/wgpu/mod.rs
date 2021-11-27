@@ -4,7 +4,7 @@ mod mesh;
 use state::Vertex;
 use crate::backends::get_bar_number;
 
-use crate::config::{Config, Color};
+use crate::config::{Config};
 
 use winit::{
     event::*,
@@ -20,7 +20,7 @@ use std::sync::mpsc;
 pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<Color>) {
+pub fn run(config: &mut Config, audio: audioviz::AudioStream) {
     let audio_ev = audio.get_event_sender();
 
     let event_loop = EventLoop::new();
@@ -37,16 +37,10 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream, color_modes: Vec<C
 
     let mut state = pollster::block_on(state::State::new(&window, audio, config.clone() ));
 
-    let cm = color_modes.into_iter();
-    let mut color_modes = cm.cycle();
-
     let mut input = WinitInputHelper::new();
     let config = config.clone();
     event_loop.run(move |event, _, control_flow| {
         if input.update(&event) {
-            if input.key_pressed(VirtualKeyCode::C) {
-                state.config.color = color_modes.next().unwrap();
-            }
             if input.key_pressed(VirtualKeyCode::Plus) || input.key_pressed(VirtualKeyCode::NumpadAdd) {
                 let (tx, rx) = mpsc::channel();
                 audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
