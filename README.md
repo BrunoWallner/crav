@@ -24,6 +24,5 @@ Because I develop this and [audioviz](https://github.com/BrunoWallner/audioviz) 
 In the future when audioviz has reached a semi-stable state this will not be a problem anymore.
 
 ## Keyboard shortcuts
-* `c` cycles between colors
 * `+` increases volume
 * `-` decreases volume

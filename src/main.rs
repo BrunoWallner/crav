@@ -7,6 +7,7 @@ pub use audioviz::*;
 
 mod audio;
 
+#[allow(unused_imports)]
 use gag::Gag;
 
 use clap::{Arg, App, AppSettings};

@@ -42,13 +42,13 @@
       ]
     ]
   },
-  "width": 1,
-  "spacing": 0,
+  "width": 2,
+  "spacing": 1,
   "mirror": true,
   "show_freqs": true,
   "wgpu": {
     "transparent": false,
-    "fullscreen": true,
+    "fullscreen": false,
     "decoration": true
   }
 }

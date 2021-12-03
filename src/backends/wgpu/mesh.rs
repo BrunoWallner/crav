@@ -25,7 +25,6 @@ pub fn from_buffer(
             w,
             h,
         &buffer, 
-        config.show_freqs,
     );
 
     for y in 0..h as usize {
@@ -51,7 +50,7 @@ pub fn from_buffer(
                 GridPixel::Bar(bar_height) => {
                     bar_height as f32 * (1.0 / h as f32) / 8.0 * 2.0
                 }
-                GridPixel::Freq(_) => 0.0
+                GridPixel::Char(_) => 0.0
             };
 
             let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)

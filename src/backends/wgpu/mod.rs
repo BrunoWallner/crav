@@ -15,7 +15,7 @@ use winit::{
 use winit_input_helper::WinitInputHelper;
 
 
-pub const PIXEL_WIDTH: u16 = 2;
+pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
 pub fn run(config: &mut Config, audio_controller: audioviz::AudioStreamController) {

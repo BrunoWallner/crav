@@ -10,7 +10,6 @@ pub struct Config {
     pub width: u8,
     pub spacing: u8,
     pub mirror: bool,
-    pub show_freqs: bool,
     pub wgpu: WgpuConfig,
 }
 impl Default for Config {
@@ -22,7 +21,6 @@ impl Default for Config {
             width: 1,
             spacing: 0,
             mirror: true,
-            show_freqs: false,
             wgpu: WgpuConfig::default(),
         }
     }

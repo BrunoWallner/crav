@@ -37,7 +37,7 @@ pub fn run(mut config: &mut Config, audio_controller: audioviz::AudioStreamContr
 
         let mut screen = BufWriter::new(screen.lock());
 
-        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing, config.show_freqs).unwrap();
+        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing).unwrap();
 
         screen.flush().unwrap();
 
