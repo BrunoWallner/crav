@@ -1,85 +1,54 @@
 {
   "audio": {
-    "sample_rate": 44100,
-    "smoothing_size": 0,
-    "smoothing_amount": 0,
+    "processor": {
+      "sample_rate": 44100,
+      "frequency_bounds": [
+        40,
+        20000
+      ],
+      "resolution": null,
+      "volume": 1.0,
+      "volume_normalisation": {
+        "Linear": 0.65
+      },
+      "frequency_distribution": [
+        [250, 1.0],
+        [1000, 5.0],
+        [2000, 1.0]
+      ],
+      "interpolation": "Step"
+    },
     "fft_resolution": 4096,
     "refresh_rate": 60,
-    "frequency_bounds": [40, 20000],
-    "bar_count": 200,
-    "volume": 1.0,
-    "volume_normalisation": {
-      "Linear": 0.65
-    },
-    "eq": [
-      [
-        30,
-        2.0
-      ],
-      [
-        150,
-        2.0
-      ],
-      [
-        250,
-        2.0
-      ],
-      [
-        2000,
-        1.0
-      ],
-      [
-       5000,
-       0.75
-      ],
-      [
-       15000,
-       0.5
-      ]
-    ],
-    "gravity": 2.0
+    "gravity": 2.5
   },
   "fps": 60,
   "color": {
     "Gradient": [
       [
-        3,
-        132,
-        252
-      ],
-      [
-        215,
-        3,
-        252
-      ],
-      [
-        255,
+        155,
         0,
-        225
+        255
       ],
       [
-        255,
         0,
-        75
+        30,
+        255
       ],
       [
+        0,
         255,
-        64,
-        0
-      ],
-      [
-        255,
-        120,
-        0
+        60
       ]
     ]
   },
   "width": 1,
   "spacing": 0,
-  "mirror": false,
+  "mirror": true,
+  "show_freqs": true,
   "wgpu": {
     "transparent": false,
-    "fullscreen": false,
+    "fullscreen": true,
     "decoration": true
   }
 }

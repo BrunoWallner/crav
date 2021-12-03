@@ -25,30 +25,36 @@ pub enum Backend {
     Wgpu,
 }
 impl Backend {
-    pub fn run(&self, config: &mut Config, audio: audioviz::AudioStream) {
+    pub fn run(&self, config: &mut Config, audio_controller: audioviz::AudioStreamController) {
         match self {
             Backend::Terminal => {
-                terminal::run(config, audio);
+                terminal::run(config, audio_controller);
             }
             Backend::Wgpu => {
-                wgpu::run(config, audio);
+                wgpu::run(config, audio_controller);
             }
         }
     }
 }
 
-pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>) -> Vec<Vec<GridPixel>> {
+pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>, show_freqs: bool) -> Vec<Vec<GridPixel>> {
     let mut buffer: Vec<Vec<GridPixel>> = vec![vec![GridPixel::Bar(0); x_size as usize]; y_size as usize];
     let f_d_p: usize = 5; //freq_display_precicion
+    let bottom: usize = if show_freqs {
+        1
+    } else {
+        0
+    };
+
 
     // bars
-    for y in 0..y_size as usize - f_d_p { // for 5 decimal place freq displaying
+    for y in 0..y_size as usize - bottom { // for 5 decimal place freq displaying
         for x in 0..x_size as usize {
             for r in 0..8 {
                 if data.len() > x {
                     let exact_y: f32 = ((y + 1) as f32 / y_size as f32) + (r as f32 * 0.125) / y_size as f32;
                     if data[x].volume >= exact_y {
-                        buffer[y + f_d_p][x] = GridPixel::Bar(r + 1);
+                        buffer[y + bottom][x] = GridPixel::Bar(r + 1);
                     }
                 }
             }
@@ -56,24 +62,34 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>) -> Ve
     }
 
     // freqs
-    for x in 0..x_size as usize {
+    let mut x: usize = 0;
+    loop {
+        if x >= x_size as usize {
+            break;
+        }
         if data.len() > x {
             let freq: Vec<u8> = 
-            data[x].freq
-                .floor()
-                .to_string()
-                .chars()
-                .map(|c| match c.to_string().parse::<u8>() {
-                    Ok(u) => u,
-                    Err(_) => 10, // only ok because of checking if it is less than 10 later
-                })
-                .collect();
+                data[x].freq
+                    .floor()
+                    .to_string()
+                    .chars()
+                    .map(|c| match c.to_string().parse::<u8>() {
+                        Ok(u) => u,
+                        Err(_) => 10, // only ok because of checking if it is less than 10 later
+                    })
+                    .collect();
     
             for f in 0..f_d_p { // for 5 decimal place freq displaying
-                if freq.len() > f && freq[f] < 10 {
-                    buffer[f_d_p - (f + 1)][x] = GridPixel::Freq(freq[f])
+                if freq.len() > f && freq[f] < 10 && x + freq.len() < x_size as usize {
+                    buffer[0][x + f] = GridPixel::Freq(freq[f])
                 }
             }
+
+            //x += freq.len() + 1;
+            x += f_d_p + 1
+        }
+        else {
+            break;
         }
     }
 

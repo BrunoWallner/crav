@@ -14,15 +14,11 @@ use winit::{
 };
 use winit_input_helper::WinitInputHelper;
 
-use std::sync::mpsc;
 
-
-pub const PIXEL_WIDTH: u16 = 9;
+pub const PIXEL_WIDTH: u16 = 2;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio: audioviz::AudioStream) {
-    let audio_ev = audio.get_event_sender();
-
+pub fn run(config: &mut Config, audio_controller: audioviz::AudioStreamController) {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_transparent(config.wgpu.transparent)
@@ -34,32 +30,19 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream) {
     if config.wgpu.fullscreen {
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
     }
+    let a_c = audio_controller.clone();
 
-    let mut state = pollster::block_on(state::State::new(&window, audio, config.clone() ));
+    let mut state = pollster::block_on(state::State::new(&window, a_c, config.clone() ));
 
     let mut input = WinitInputHelper::new();
     let config = config.clone();
     event_loop.run(move |event, _, control_flow| {
         if input.update(&event) {
             if input.key_pressed(VirtualKeyCode::Plus) || input.key_pressed(VirtualKeyCode::NumpadAdd) {
-                let (tx, rx) = mpsc::channel();
-                audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
-                let cfg = rx.recv().unwrap();
-                let config = audioviz::Config {
-                    volume: cfg.volume * 1.1,
-                    ..cfg
-                };
-                audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
+                audio_controller.adjust_volume(1.1);
             }
             if input.key_pressed(VirtualKeyCode::Minus) || input.key_pressed(VirtualKeyCode::NumpadSubtract) {
-                let (tx, rx) = mpsc::channel();
-                audio_ev.send(audioviz::Event::RequestConfig(tx)).unwrap();
-                let cfg = rx.recv().unwrap();
-                let config = audioviz::Config {
-                    volume: cfg.volume * 0.9,
-                    ..cfg
-                };
-                audio_ev.send(audioviz::Event::SendConfig(config)).unwrap();
+                audio_controller.adjust_volume(0.9);
             }
             if input.key_pressed(VirtualKeyCode::M) {
                 state.config.mirror = !state.config.mirror;
@@ -67,7 +50,7 @@ pub fn run(config: &mut Config, audio: audioviz::AudioStream) {
                 let screen_width = state.size.width as u16 / PIXEL_WIDTH;
                 let mut bar_number = get_bar_number(config.width, config.spacing, screen_width) as usize;
                 if state.config.mirror {bar_number /= 2}
-                state.audio.set_bar_number(bar_number);
+                audio_controller.set_resolution(bar_number);
             }
         }
 

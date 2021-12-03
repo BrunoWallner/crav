@@ -44,19 +44,19 @@ pub struct State {
     vertex_buffer: wgpu::Buffer,
     num_indices: u32,
     index_buffer: wgpu::Buffer,
-    pub audio: audioviz::AudioStream,
+    pub audio: audioviz::AudioStreamController,
     pub config: Config,
 }
 
 impl State {
     // Creating some of the wgpu types requires async code
-    pub async fn new(window: &Window, audio: audioviz::AudioStream, config: Config) -> Self {
+    pub async fn new(window: &Window, audio: audioviz::AudioStreamController, config: Config) -> Self {
         let size = window.inner_size();
 
         let screen_width = size.width as u16 / PIXEL_WIDTH;
         let mut bar_number = get_bar_number(config.width, config.spacing, screen_width) as usize;
         if config.mirror {bar_number /= 2}
-        audio.set_bar_number(bar_number);
+        audio.set_resolution(bar_number);
 
         // The instance is a handle to our GPU
         // BackendBit::PRIMARY => Vulkan + Metal + DX12 + Browser WebGPU
@@ -184,7 +184,7 @@ impl State {
             let screen_width = self.size.width as u16 / PIXEL_WIDTH;
             let mut bar_number = get_bar_number(self.config.width, self.config.spacing, screen_width) as usize;
             if self.config.mirror {bar_number /= 2}
-            self.audio.set_bar_number(bar_number);
+            self.audio.set_resolution(bar_number);
         }
     }
 
@@ -193,7 +193,7 @@ impl State {
     }
 
     pub fn update(&mut self) {
-        let mut buffer = self.audio.get_audio_data();
+        let mut buffer = self.audio.get_frequencies();
 
         if self.config.mirror {
             for i in 0..buffer.len() {

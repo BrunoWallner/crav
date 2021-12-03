@@ -86,17 +86,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     let audio = AudioStream::init(config.audio.clone());
-    let audio_ev = audio.get_event_sender();
+    let audio_controller = audio.get_controller();
 
     // streaming audio using cpal to audiostream
+    let a_c = audio_controller.clone();
     std::thread::spawn(move || loop {
         //let _gag = Gag::stderr().unwrap();
-        let _stream = audio::stream_audio(audio_ev.clone(), audio::AudioDevice::Output(0));
+        let _stream = audio::stream_audio(a_c.clone(), audio::AudioDevice::Output(0));
         std::thread::park();
     });
 
 
-    backend.run(&mut config, audio);
+    backend.run(&mut config, audio_controller);
 
     println!("bye bye!");
 

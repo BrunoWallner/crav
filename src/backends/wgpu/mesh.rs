@@ -25,6 +25,7 @@ pub fn from_buffer(
             w,
             h,
         &buffer, 
+        config.show_freqs,
     );
 
     for y in 0..h as usize {

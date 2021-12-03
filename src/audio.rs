@@ -1,4 +1,3 @@
-use std::sync::mpsc;
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use gag::Gag;
 
@@ -9,7 +8,7 @@ pub enum AudioDevice {
     Output(usize),
 }
 
-pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: AudioDevice) -> Result<cpal::Stream, ()> {
+pub fn stream_audio(audio_controller: audioviz::AudioStreamController, audio_device: AudioDevice) -> Result<cpal::Stream, ()> {
     //let _print_gag = Gag::stderr().unwrap();
     let host = cpal::default_host();
     let input_devices = host.input_devices().unwrap().collect::<Vec<cpal::Device>>();
@@ -60,7 +59,7 @@ pub fn stream_audio(event_sender: mpsc::Sender<audioviz::Event>, audio_device: A
     */
     let stream = device.build_input_stream(
         &device_config.into(),
-        move |data, _: &_| handle_input_data_f32(data, event_sender.clone()),
+        move |data, _: &_| handle_input_data_f32(data, audio_controller.clone()),
         err_fn,
     ).unwrap();
 
@@ -89,9 +88,10 @@ pub fn iter_audio_devices() -> (Vec<String>, Vec<String>) {
     (input_devices, output_devices)
 }
 
-fn handle_input_data_f32(data: &[f32], sender: mpsc::Sender<audioviz::Event>) {
+fn handle_input_data_f32(data: &[f32], audio_controller: audioviz::AudioStreamController) {
     // sends the raw data to audio_stream via the event_sender
-    sender.send(audioviz::Event::SendData(data.to_vec())).unwrap();
+    //sender.send(audioviz::Event::SendData(data.to_vec())).unwrap();
+    audio_controller.send_raw_data(data);
 }
 
 fn err_fn(err: cpal::StreamError) {
