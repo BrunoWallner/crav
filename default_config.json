@@ -12,15 +12,15 @@
         "Linear": 0.65
       },
       "frequency_distribution": [
-        [250, 1.0],
-        [1000, 5.0],
+        [250, 1.5],
+        [1000, 2.0],
         [2000, 1.0]
       ],
       "interpolation": "Step"
     },
     "fft_resolution": 4096,
     "refresh_rate": 60,
-    "gravity": 2.5
+    "gravity": 1.0
   },
   "fps": 60,
   "color": {
@@ -42,8 +42,8 @@
       ]
     ]
   },
-  "width": 2,
-  "spacing": 1,
+  "width": 1,
+  "spacing": 0,
   "mirror": true,
   "show_freqs": true,
   "wgpu": {

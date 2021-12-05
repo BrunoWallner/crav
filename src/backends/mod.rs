@@ -1,5 +1,8 @@
 use crate::config::Config;
 
+use audioviz::spectralizer::stream::StreamController;
+use audioviz::spectralizer::Frequency;
+
 // IDK how to only use 1 #[cfg] per target_family but this should work at least fine
 #[cfg(target_family = "unix")]
 mod termion;
@@ -25,7 +28,7 @@ pub enum Backend {
     Wgpu,
 }
 impl Backend {
-    pub fn run(&self, config: &mut Config, audio_controller: audioviz::AudioStreamController) {
+    pub fn run(&self, config: &mut Config, audio_controller: StreamController) {
         match self {
             Backend::Terminal => {
                 terminal::run(config, audio_controller);
@@ -37,7 +40,7 @@ impl Backend {
     }
 }
 
-pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>) -> Vec<Vec<GridPixel>> {
+pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<Frequency>) -> Vec<Vec<GridPixel>> {
     let mut buffer: Vec<Vec<GridPixel>> = vec![vec![GridPixel::Bar(0); x_size as usize]; y_size as usize];
 
     // bars
@@ -45,7 +48,7 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>) -> Ve
         for x in 0..x_size as usize {
             for r in 0..8 {
                 if data.len() > x {
-                    let exact_y: f32 = ((y + 1) as f32 / y_size as f32) + (r as f32 * 0.125) / y_size as f32;
+                    let exact_y: f32 = (y as f32 / y_size as f32) + (r as f32 * 0.125) / y_size as f32;
                     if data[x].volume >= exact_y {
                         buffer[y][x] = GridPixel::Bar(r + 1);
                     }
@@ -53,6 +56,19 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<audioviz::Frequency>) -> Ve
             }
         }
     }
+    /* points
+    for y in 0..y_size as usize {
+        for x in 0..x_size as usize {
+            if data.len() > x {
+                let rel_y = (y + 1) as f32 / y_size as f32;
+                if data[x].volume >= rel_y - (1.0 / y_size as f32)
+                && data[x].volume <= rel_y + (1.0 / y_size as f32) {
+                    buffer[y][x] = GridPixel::Bar(8);
+                }
+            }
+        }
+    }
+    */
 
     buffer
 }

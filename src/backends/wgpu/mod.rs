@@ -14,11 +14,12 @@ use winit::{
 };
 use winit_input_helper::WinitInputHelper;
 
+use audioviz::spectralizer::stream::StreamController;
 
 pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio_controller: audioviz::AudioStreamController) {
+pub fn run(config: &mut Config, audio_controller: StreamController) {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_transparent(config.wgpu.transparent)

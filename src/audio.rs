@@ -1,6 +1,9 @@
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use gag::Gag;
 
+use audioviz::spectralizer::stream::StreamController;
+
+
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy)]
 pub enum AudioDevice {
@@ -8,7 +11,7 @@ pub enum AudioDevice {
     Output(usize),
 }
 
-pub fn stream_audio(audio_controller: audioviz::AudioStreamController, audio_device: AudioDevice) -> Result<cpal::Stream, ()> {
+pub fn stream_audio(audio_controller: StreamController, audio_device: AudioDevice) -> Result<cpal::Stream, ()> {
     //let _print_gag = Gag::stderr().unwrap();
     let host = cpal::default_host();
     let input_devices = host.input_devices().unwrap().collect::<Vec<cpal::Device>>();
@@ -88,7 +91,7 @@ pub fn iter_audio_devices() -> (Vec<String>, Vec<String>) {
     (input_devices, output_devices)
 }
 
-fn handle_input_data_f32(data: &[f32], audio_controller: audioviz::AudioStreamController) {
+fn handle_input_data_f32(data: &[f32], audio_controller: StreamController) {
     // sends the raw data to audio_stream via the event_sender
     //sender.send(audioviz::Event::SendData(data.to_vec())).unwrap();
     audio_controller.send_raw_data(data);

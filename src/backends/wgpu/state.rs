@@ -6,6 +6,7 @@ use crate::config::Config;
 use crate::backends::wgpu::{PIXEL_WIDTH, mesh};
 use crate::backends::{get_bar_number};
 
+use audioviz::spectralizer::stream::StreamController;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
@@ -44,13 +45,13 @@ pub struct State {
     vertex_buffer: wgpu::Buffer,
     num_indices: u32,
     index_buffer: wgpu::Buffer,
-    pub audio: audioviz::AudioStreamController,
+    pub audio: StreamController,
     pub config: Config,
 }
 
 impl State {
     // Creating some of the wgpu types requires async code
-    pub async fn new(window: &Window, audio: audioviz::AudioStreamController, config: Config) -> Self {
+    pub async fn new(window: &Window, audio: StreamController, config: Config) -> Self {
         let size = window.inner_size();
 
         let screen_width = size.width as u16 / PIXEL_WIDTH;

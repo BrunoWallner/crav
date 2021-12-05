@@ -1,18 +1,16 @@
 use std::error::Error;
 
 mod backends;
-
 mod config;
 pub use audioviz::*;
-
 mod audio;
 
 #[allow(unused_imports)]
 use gag::Gag;
 
 use clap::{Arg, App, AppSettings};
-
 use std::fs;
+
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -86,7 +84,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     };
 
-    let audio = AudioStream::init(config.audio.clone());
+    let audio = audioviz::spectralizer::stream::Stream::init(config.audio.clone());
     let audio_controller = audio.get_controller();
 
     // streaming audio using cpal to audiostream
@@ -95,13 +93,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         //let _gag = Gag::stderr().unwrap();
         let _stream = audio::stream_audio(a_c.clone(), audio::AudioDevice::Output(0));
         std::thread::park();
+        /*
+        loop {
+            let mut buf: Vec<f32> = Vec::new();
+            for _ in 0..=255 {
+                let num: f32 = rand::thread_rng().gen();
+                buf.push(num * 0.1);
+            }
+            a_c.send_raw_data(&buf);
+        }
+        */
     });
 
 
     backend.run(&mut config, audio_controller);
-
-    println!("bye bye!");
-
-
     Ok(())
 }

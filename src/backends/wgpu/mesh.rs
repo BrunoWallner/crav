@@ -4,8 +4,10 @@ use crate::backends::{gen_grid, GridPixel};
 
 use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT};
 
+use audioviz::spectralizer::Frequency;
+
 pub fn from_buffer(
-    buffer: Vec<audioviz::Frequency>,
+    buffer: Vec<Frequency>,
     config: &Config,
     window_size: (u32, u32),
 ) -> (Vec<Vertex>, Vec<u32>)  {

@@ -4,7 +4,7 @@ use splines::{Interpolation, Key, Spline}; // for interpolation in color gradien
 #[derive(Serialize, Deserialize)]
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub audio: audioviz::Config,
+    pub audio: audioviz::spectralizer::config::StreamConfig,
     pub fps: u64,
     pub color: Color,
     pub width: u8,
@@ -15,7 +15,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            audio: audioviz::Config::default(),
+            audio: audioviz::spectralizer::config::StreamConfig::default(),
             fps: 60,
             color: Color::Gradient(vec![ [155, 0, 255], [0, 30, 255], [0, 255, 60] ]),
             width: 1,

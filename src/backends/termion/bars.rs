@@ -5,6 +5,8 @@ use crate::config::Color;
 use std::io::BufWriter;
 use crate::backends::{gen_grid, get_bar_number, GridPixel};
 
+use audioviz::spectralizer::Frequency;
+
 fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w: u8, spacing: u8) -> Vec<String> {
     let mut lines: Vec<String> = vec![String::new(); height as usize];
     //let calculated_width: usize = get_bar_number(w, spacing, width) * 2;
@@ -66,7 +68,7 @@ fn u8_to_string(pixel: GridPixel, width: u8, spacing: u8) -> String {
     match pixel {
         GridPixel::Bar(_) => {
             for _ in 1..width {
-                string.push_str(&str);
+                string.push(' ');
             };
         },
         GridPixel::Char(_) => {
@@ -86,7 +88,7 @@ fn u8_to_string(pixel: GridPixel, width: u8, spacing: u8) -> String {
 }
 
 pub fn draw(
-    data: &Vec<audioviz::Frequency>, 
+    data: &Vec<Frequency>, 
     screen: &mut BufWriter<StdoutLock>, 
     size: [u16; 2], 
     color: Color,
