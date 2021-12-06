@@ -253,7 +253,7 @@ impl State {
                                     wgpu::Color::BLACK
                                 }
                             ),
-                            store: false,
+                            store: true,
                         }
                     }
                 ],
