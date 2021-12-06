@@ -472,6 +472,7 @@ dependencies = [
  "env_logger",
  "gag",
  "pollster",
+ "rand",
  "serde",
  "serde_json",
  "splines",

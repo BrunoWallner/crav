@@ -11,6 +11,7 @@ use gag::Gag;
 use clap::{Arg, App, AppSettings};
 use std::fs;
 
+use rand::Rng;
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -35,9 +36,14 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .takes_value(true)
                 .help("path of config"))
 
+    .arg(Arg::with_name("debug_white_noise")
+                .long("debug-white-noise")
+                .takes_value(false)
+                .help("will display white noise instead of captured audio, for debug purposes"))
+
     .arg(Arg::with_name("print_config")
                 .short("p")
-                .long("print_config")
+                .long("print-config")
                 .takes_value(false)
                 .help("prints default config to './default_config.json'"))
 
@@ -87,23 +93,26 @@ fn main() -> Result<(), Box<dyn Error>> {
     let audio = audioviz::spectralizer::stream::Stream::init(config.audio.clone());
     let audio_controller = audio.get_controller();
 
-    // streaming audio using cpal to audiostream
+    // streaming audio using cpal to audiostream or white-noise
     let a_c = audio_controller.clone();
-    std::thread::spawn(move || loop {
-        //let _gag = Gag::stderr().unwrap();
-        let _stream = audio::stream_audio(a_c.clone(), audio::AudioDevice::Output(0));
-        std::thread::park();
-        /*
-        loop {
-            let mut buf: Vec<f32> = Vec::new();
-            for _ in 0..=255 {
-                let num: f32 = rand::thread_rng().gen();
-                buf.push(num * 0.1);
+    if matches.is_present("debug_white_noise") {
+        std::thread::spawn(move || loop {
+            loop {
+                let mut buf: Vec<f32> = Vec::new();
+                for _ in 0..=255 {
+                    let num: f32 = rand::thread_rng().gen();
+                    buf.push(num);
+                }
+                a_c.send_raw_data(&buf);
             }
-            a_c.send_raw_data(&buf);
-        }
-        */
-    });
+        });
+    } else {
+        std::thread::spawn(move || loop {
+            //let _gag = Gag::stderr().unwrap();
+            let _stream = audio::stream_audio(a_c.clone(), audio::AudioDevice::Output(0));
+            std::thread::park();
+        });
+    }
 
 
     backend.run(&mut config, audio_controller);
