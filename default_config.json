@@ -3,7 +3,7 @@
     "processor": {
       "sample_rate": 44100,
       "frequency_bounds": [
-        20,
+        40,
         20000
       ],
       "resolution": null,
