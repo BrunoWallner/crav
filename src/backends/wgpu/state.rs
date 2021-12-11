@@ -195,6 +195,7 @@ impl State {
 
     pub fn update(&mut self) {
         let mut buffer = self.audio.get_frequencies();
+        println!("{}", buffer[0].position);
 
         if self.config.mirror {
             for i in 0..buffer.len() {

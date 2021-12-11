@@ -2,8 +2,9 @@ use std::error::Error;
 
 mod backends;
 mod config;
-pub use audioviz::*;
-mod audio;
+
+use audioviz::audio_capture::{config::Config as CaptureConfig, capture::Capture};
+use audioviz::spectralizer::stream::{Stream, StreamController};
 
 #[allow(unused_imports)]
 use gag::Gag;
@@ -11,7 +12,6 @@ use gag::Gag;
 use clap::{Arg, App, AppSettings};
 use std::fs;
 
-use rand::Rng;
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -35,11 +35,6 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .long("config")
                 .takes_value(true)
                 .help("path of config"))
-
-    .arg(Arg::with_name("debug_white_noise")
-                .long("debug-white-noise")
-                .takes_value(false)
-                .help("will display white noise instead of captured audio, for debug purposes"))
 
     .arg(Arg::with_name("print_config")
                 .short("p")
@@ -90,29 +85,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     };
 
-    let audio = audioviz::spectralizer::stream::Stream::init(config.audio.clone());
-    let audio_controller = audio.get_controller();
-
-    // streaming audio using cpal to audiostream or white-noise
-    let a_c = audio_controller.clone();
-    if matches.is_present("debug_white_noise") {
-        std::thread::spawn(move || loop {
-            loop {
-                let mut buf: Vec<f32> = Vec::new();
-                for _ in 0..=255 {
-                    let num: f32 = rand::thread_rng().gen();
-                    buf.push(num);
-                }
-                a_c.send_raw_data(&buf);
-            }
-        });
-    } else {
-        std::thread::spawn(move || loop {
-            //let _gag = Gag::stderr().unwrap();
-            let _stream = audio::stream_audio(a_c.clone(), audio::AudioDevice::Output(0));
-            std::thread::park();
-        });
-    }
+    let audio_capture_config = CaptureConfig {
+        latency: Some(500),
+        ..Default::default()
+    };
+    let capture = Capture::init(audio_capture_config);
+    let audio = Stream::init_with_capture(capture, config.audio.clone());
+    let audio_controller: StreamController = audio.get_controller();
 
 
     backend.run(&mut config, audio_controller);

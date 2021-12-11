@@ -104,6 +104,7 @@ name = "audioviz"
 version = "0.3.2"
 dependencies = [
  "apodize",
+ "cpal",
  "rustfft",
  "serde",
  "splines",

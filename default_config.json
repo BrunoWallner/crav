@@ -3,7 +3,7 @@
     "processor": {
       "sample_rate": 44100,
       "frequency_bounds": [
-        40,
+        20,
         20000
       ],
       "resolution": null,
@@ -12,40 +12,32 @@
         "Linear": 0.65
       },
       "frequency_distribution": [
-        [250, 2.5],
-        [1000, 4.0],
-        [2000, 1.0]
+        [
+          250,
+          6.0
+        ],
+        [
+          1000,
+          6.0
+        ],
+        [
+          2500,
+          1.0
+        ]
       ],
       "interpolation": "Step"
     },
     "fft_resolution": 4096,
     "refresh_rate": 60,
-    "gravity": 1.0
+    "gravity": 2.5
   },
   "fps": 60,
   "color": {
-    "Gradient": [
-      [
-        155,
-        0,
-        255
-      ],
-      [
-        0,
-        30,
-        255
-      ],
-      [
-        0,
-        255,
-        60
-      ]
-    ]
+    "Rgb": [255, 0, 0]
   },
   "width": 1,
   "spacing": 0,
   "mirror": true,
-  "show_freqs": true,
   "wgpu": {
     "transparent": false,
     "fullscreen": false,
