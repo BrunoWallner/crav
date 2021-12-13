@@ -10,8 +10,8 @@ edition = "2021"
 # for debug white noise
 rand = "0.8.4"
 
-audioviz = { path = "../audioviz" }
-# audioviz = "0.3.0"
+audioviz = { path = "../audioviz", features = ["serde", "cpal"] }
+
 cpal = "0.13.4"
 gag = "1.0.0"
 clap = "2.33.3"

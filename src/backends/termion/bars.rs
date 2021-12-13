@@ -5,7 +5,7 @@ use crate::config::Color;
 use std::io::BufWriter;
 use crate::backends::{gen_grid, get_bar_number, GridPixel};
 
-use audioviz::spectralizer::Frequency;
+use audioviz::spectrum::Frequency;
 
 fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w: u8, spacing: u8) -> Vec<String> {
     let mut lines: Vec<String> = vec![String::new(); height as usize];

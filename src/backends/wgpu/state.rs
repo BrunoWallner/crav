@@ -6,7 +6,7 @@ use crate::config::Config;
 use crate::backends::wgpu::{PIXEL_WIDTH, mesh};
 use crate::backends::{get_bar_number};
 
-use audioviz::spectralizer::stream::StreamController;
+use audioviz::spectrum::stream::StreamController;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]

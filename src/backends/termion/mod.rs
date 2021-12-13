@@ -12,7 +12,7 @@ use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
 use std::io::{Write, stdout};
 
-use audioviz::spectralizer::stream::StreamController;
+use audioviz::spectrum::stream::StreamController;
 
 pub fn run(mut config: &mut Config, audio_controller: StreamController) {
     let raw = stdout().into_raw_mode().unwrap();

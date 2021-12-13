@@ -4,7 +4,7 @@ mod backends;
 mod config;
 
 use audioviz::audio_capture::{config::Config as CaptureConfig, capture::Capture};
-use audioviz::spectralizer::stream::{Stream, StreamController};
+use audioviz::spectrum::stream::{Stream, StreamController};
 
 #[allow(unused_imports)]
 use gag::Gag;
@@ -89,8 +89,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         latency: Some(500),
         ..Default::default()
     };
-    let capture = Capture::init(audio_capture_config);
-    let audio = Stream::init_with_capture(capture, config.audio.clone());
+    let capture = Capture::init(audio_capture_config)
+	.unwrap();
+    let audio = Stream::init_with_capture(&capture, config.audio.clone());
     let audio_controller: StreamController = audio.get_controller();
 
 

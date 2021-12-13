@@ -14,7 +14,7 @@ use winit::{
 };
 use winit_input_helper::WinitInputHelper;
 
-use audioviz::spectralizer::stream::StreamController;
+use audioviz::spectrum::stream::StreamController;
 
 pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;

@@ -1,7 +1,7 @@
 use crate::config::Config;
 
-use audioviz::spectralizer::stream::StreamController;
-use audioviz::spectralizer::Frequency;
+use audioviz::spectrum::stream::StreamController;
+use audioviz::spectrum::Frequency;
 
 // IDK how to only use 1 #[cfg] per target_family but this should work at least fine
 #[cfg(target_family = "unix")]
