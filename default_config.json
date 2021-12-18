@@ -3,40 +3,39 @@
     "processor": {
       "sample_rate": 44100,
       "frequency_bounds": [
-        40,
+        45,
         20000
       ],
       "resolution": null,
-      "volume": 1.0,
+      "volume": 0.5,
       "volume_normalisation": {
-        "Linear": 0.6
+        "Linear": 0.65
       },
-      "frequency_distribution": [
-        [
-          150,
-          6.5
-        ],
-        [
-          1000,
-          5.0
-        ],
-        [
-          2500,
-          1.0
-        ]
-      ],
-      "interpolation": "Linear"
+      "position_normalisation": "Harmonic",
+      "manual_position_distribution": null,
+      "interpolation": "Step"
     },
     "fft_resolution": 4096,
-    "refresh_rate": 60,
-    "gravity": 1.75
+    "refresh_rate": 120,
+    "gravity": 0.5
   },
   "fps": 60,
   "color": {
-    "Rgb": [255, 0, 0]
+    "Gradient": [
+        [
+          0,
+          255,
+          255
+        ],
+        [
+          255,
+          0,
+          0
+        ]
+      ]
   },
   "width": 1,
-  "spacing": 1,
+  "spacing": 0,
   "mirror": true,
   "wgpu": {
     "transparent": false,

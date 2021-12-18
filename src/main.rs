@@ -86,7 +86,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     let audio_capture_config = CaptureConfig {
-        latency: Some(500),
         ..Default::default()
     };
     let capture = Capture::init(audio_capture_config)
