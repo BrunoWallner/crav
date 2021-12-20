@@ -18,11 +18,7 @@ The terminal backend is currently only working on unix systems, but the wgpu bac
 | tty               | working, but limited color and bar height accuracy |
 | windows-terminals | not working, but WIP |
 
-## compiling
-Because I develop this and [audioviz](https://github.com/BrunoWallner/audioviz) simultaneously you have to clone `github.com/BrunoWallner/audioviz` next to the `crav` folder if you want to compile it.
-
-In the future when audioviz has reached a semi-stable state this will not be a problem anymore.
-
 ## Keyboard shortcuts
 * `+` increases volume
 * `-` decreases volume
+* `m` toggles mirroring
