@@ -1,8 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use splines::{Interpolation, Key, Spline}; // for interpolation in color gradients
 
-#[derive(Serialize, Deserialize)]
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config {
     pub audio: audioviz::spectrum::config::StreamConfig,
     pub fps: u64,
@@ -17,7 +16,7 @@ impl Default for Config {
         Config {
             audio: audioviz::spectrum::config::StreamConfig::default(),
             fps: 60,
-            color: Color::Gradient(vec![ [155, 0, 255], [0, 30, 255], [0, 255, 60] ]),
+            color: Color::Gradient(vec![[155, 0, 255], [0, 30, 255], [0, 255, 60]]),
             width: 1,
             spacing: 0,
             mirror: true,
@@ -26,8 +25,7 @@ impl Default for Config {
     }
 }
 
-#[derive(Serialize, Deserialize)]
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Color {
     Gradient(Vec<[u8; 3]>),
     Rgb([u8; 3]),
@@ -44,9 +42,21 @@ impl Color {
 
                 let step: f32 = 1.0_f32 / g.len() as f32;
                 for (i, color) in g.iter().enumerate() {
-                    r_points.push(Key::new( (i as f32 + step) * step, color[0] as f32, Interpolation::Linear ));
-                    g_points.push(Key::new( (i as f32 + step) * step, color[1] as f32, Interpolation::Linear ));
-                    b_points.push(Key::new( (i as f32 + step) * step, color[2] as f32, Interpolation::Linear ));
+                    r_points.push(Key::new(
+                        (i as f32 + step) * step,
+                        color[0] as f32,
+                        Interpolation::Linear,
+                    ));
+                    g_points.push(Key::new(
+                        (i as f32 + step) * step,
+                        color[1] as f32,
+                        Interpolation::Linear,
+                    ));
+                    b_points.push(Key::new(
+                        (i as f32 + step) * step,
+                        color[2] as f32,
+                        Interpolation::Linear,
+                    ));
                 }
                 let r_spline = Spline::from_vec(r_points);
                 let g_spline = Spline::from_vec(g_points);
@@ -55,16 +65,15 @@ impl Color {
                 [
                     r_spline.clamped_sample(relative_y).unwrap_or(0.0) as u8,
                     g_spline.clamped_sample(relative_y).unwrap_or(0.0) as u8,
-                    b_spline.clamped_sample(relative_y).unwrap_or(0.0) as u8
+                    b_spline.clamped_sample(relative_y).unwrap_or(0.0) as u8,
                 ]
             }
-            Color::Rgb(c) => *c
+            Color::Rgb(c) => *c,
         }
     }
 }
 
-#[derive(Serialize, Deserialize)]
-#[derive(Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WgpuConfig {
     pub transparent: bool,
     pub fullscreen: bool,

@@ -81,7 +81,17 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
         None =>  {
-            config::Config::default()
+            config::Config {
+                audio: audioviz::spectrum::config::StreamConfig {
+                    processor: audioviz::spectrum::config::ProcessorConfig {
+                        volume: 4.0,
+                        ..Default::default()
+                    },
+                    gravity: Some(35.0),
+                    ..Default::default()
+                },
+                ..Default::default()
+            }
         }
     };
 

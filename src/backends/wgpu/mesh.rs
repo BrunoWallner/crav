@@ -12,7 +12,7 @@ pub fn from_buffer(
     window_size: (u32, u32),
 ) -> (Vec<Vertex>, Vec<u32>)  {
     let (w, h) = ( (window_size.0 / PIXEL_WIDTH as u32) as u16, (window_size.1 / PIXEL_HEIGHT as u32) as u16 );
-    let width = 1.0 / w as f32 * config.width as f32 * 2.0; // * 2.0 because wgpu goes from -1 to 1
+    let width = 1.0 / w as f32 * 2.0; // * 2.0 because wgpu goes from -1 to 1
 
     //let w: u16 = get_bar_number(config.width, config.spacing, w) as u16; // calculates width further
 
@@ -27,6 +27,8 @@ pub fn from_buffer(
             w,
             h,
         &buffer, 
+        config.width,
+        config.spacing
     );
 
     for y in 0..h as usize {
@@ -48,22 +50,25 @@ pub fn from_buffer(
         };
 
         for x in 0..w as usize {
-            let p: f32 = match grid[y][x] {
+            let precision_height: f32 = match grid[y][x] {
                 GridPixel::Bar(bar_height) => {
                     bar_height as f32 * (1.0 / h as f32) / 8.0 * 2.0
                 }
                 GridPixel::Char(_) => 0.0
             };
 
-            let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)
-                * 2.0 - 1.0; // because wgpu goes from -1 to 1
+            //let x = ((x as f32 / w as f32) * (config.spacing + config.width) as f32)
+            //    * 2.0 - 1.0; // because wgpu goes from -1 to 1
+
+            let x = (x as f32 / w as f32) * 2.0 - 1.0;
+
             let y = y as f32 / h as f32 * 2.0 - 1.0;
 
             vertices.push(Vertex { position: [x,  y, 0.0],   color});
             vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
 
-            vertices.push(Vertex { position: [x,  y + p, 0.0],   color});
-            vertices.push(Vertex { position: [x + width,  y + p, 0.0],   color});
+            vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
+            vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
 
             let i = vertices.len() as u32 - 4;
             indices.push(i+0);

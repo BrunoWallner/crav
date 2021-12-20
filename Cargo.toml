@@ -6,11 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-# for debug white noise
-rand = "0.8.4"
-
-audioviz = { path = "../audioviz", features = ["serde", "cpal"] }
+audioviz = { version = "0.4.1", features = ["serde", "cpal"] }
 
 cpal = "0.13.4"
 gag = "1.0.0"

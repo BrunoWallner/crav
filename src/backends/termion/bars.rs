@@ -3,11 +3,11 @@ use std::error::Error;
 use termion::color;
 use crate::config::Color;
 use std::io::BufWriter;
-use crate::backends::{gen_grid, get_bar_number, GridPixel};
+use crate::backends::{gen_grid, GridPixel};
 
 use audioviz::spectrum::Frequency;
 
-fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w: u8, spacing: u8) -> Vec<String> {
+fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color) -> Vec<String> {
     let mut lines: Vec<String> = vec![String::new(); height as usize];
     //let calculated_width: usize = get_bar_number(w, spacing, width) * 2;
 
@@ -16,7 +16,7 @@ fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w
             lines[0].push_str( &format!("{}", color::Fg(color::Rgb(color[0], color[1], color[2]))) );
             for y in 0..height as usize {
                 for x in 0..width as usize {
-                    let str = u8_to_string(grid[y][x], w, spacing);
+                    let str = u8_to_string(grid[y][x]);
 
                     lines[y].push_str(str.as_str());
                 }
@@ -29,7 +29,7 @@ fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w
                 lines[y].push_str(&format!("{}", color::Fg(color::Rgb(color[0], color[1], color[2]))));
                 for x in 0..width as usize {
                     if grid[y].len() > x {
-                        let str = u8_to_string(grid[y][x], w, spacing);
+                        let str = u8_to_string(grid[y][x]);
 
                         lines[y].push_str(str.as_str());
                     }
@@ -40,7 +40,7 @@ fn get_lines(width: u16, height: u16, grid: Vec<Vec<GridPixel>>, color: Color, w
     lines
 }
 
-fn u8_to_string(pixel: GridPixel, width: u8, spacing: u8) -> String {
+fn u8_to_string(pixel: GridPixel) -> String {
     let str = match pixel {
         GridPixel::Bar(b) => {
             let pixel= match b {
@@ -62,29 +62,7 @@ fn u8_to_string(pixel: GridPixel, width: u8, spacing: u8) -> String {
         }
     };
 
-    let mut string = str.to_string();
-
-    // width
-    match pixel {
-        GridPixel::Bar(_) => {
-            for _ in 1..width {
-                string.push(' ');
-            };
-        },
-        GridPixel::Char(_) => {
-            for _ in 1..width {
-                string.push(' ');
-            };
-        },
-    }
-
-    // spacing
-    for _ in 0..spacing {
-        string.push(' ');
-    };
-
-
-    string
+    str.to_string()
 }
 
 pub fn draw(
@@ -95,10 +73,10 @@ pub fn draw(
     width: u8,
     spacing: u8,
 ) -> Result<(), Box<dyn Error>> {
-    let calculated_width: u16 = get_bar_number(width, spacing, size[0]) as u16;
+    //let calculated_width: u16 = get_bar_number(width, spacing, size[0]) as u16;
 
-    let grid = gen_grid(calculated_width, size[1], &data);
-    let lines = get_lines(calculated_width, size[1], grid, color, width, spacing);
+    let grid = gen_grid(size[0], size[1], &data, width, spacing);
+    let lines = get_lines(size[0], size[1], grid, color);
 
     for y in 0..size[1] as usize {
         write!( screen, "{}", termion::cursor::Goto(0, size[1] - y as u16) )?;

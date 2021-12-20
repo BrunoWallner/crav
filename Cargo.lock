@@ -101,7 +101,9 @@ dependencies = [
 
 [[package]]
 name = "audioviz"
-version = "0.4.0"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eeeb8b5e7dd51b01696c9c700c367038599153ea43ea0dfafbbd4c1f9625ff2c"
 dependencies = [
  "apodize",
  "cpal",
@@ -473,7 +475,6 @@ dependencies = [
  "env_logger",
  "gag",
  "pollster",
- "rand",
  "serde",
  "serde_json",
  "splines",

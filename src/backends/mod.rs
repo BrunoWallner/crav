@@ -40,10 +40,10 @@ impl Backend {
     }
 }
 
-pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<Frequency>) -> Vec<Vec<GridPixel>> {
+pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<Frequency>, width: u8, spacing: u8) -> Vec<Vec<GridPixel>> {
     let mut buffer: Vec<Vec<GridPixel>> = vec![vec![GridPixel::Bar(0); x_size as usize]; y_size as usize];
 
-    // bars
+    /* bars
     for y in 0..y_size as usize {
         for x in 0..x_size as usize {
             for r in 0..8 {
@@ -56,19 +56,58 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<Frequency>) -> Vec<Vec<Grid
             }
         }
     }
-    /* points
-    for y in 0..y_size as usize {
-        for x in 0..x_size as usize {
-            if data.len() > x {
-                let rel_y = (y + 1) as f32 / y_size as f32;
-                if data[x].volume >= rel_y - (1.0 / y_size as f32)
-                && data[x].volume <= rel_y + (1.0 / y_size as f32) {
-                    buffer[y][x] = GridPixel::Bar(8);
+    */
+
+    /*
+    let mut screen_x: usize = 0;
+    let mut x: usize = 0;
+
+    let mut y: usize = 0;
+    'y: loop {
+        'x: loop {
+            let rel_y: f32 = y as f32 / y_size as f32;
+            for _ in 0..width {
+                screen_x += 1;
+                if screen_x as u16 >= x_size || x >= data.len() {break 'x}
+                if data[x].volume >= rel_y {
+                    buffer[y][screen_x] = GridPixel::Bar(8);
                 }
             }
+            x += 1;
+            screen_x += spacing as usize;
         }
+        x = 0;
+        screen_x = 0;
+        y += 1;
+        if y as u16 >= y_size {break 'y}
     }
     */
+    let mut screen_x: usize = 0;
+    //let mut x: usize = 0;
+    for x in 0..x_size as usize {
+        if data.len() > x {
+            let height: usize = data[x].volume.trunc() as usize;
+
+            // can range from 0 to 1, top of bar for 8 times more precision
+            let precision_top: f32 = data[x].volume - height as f32;
+            let upper_bar: u8 = (precision_top * 8.0) as u8 + 1;
+
+            for _ in 0..width {
+                for y in 0..height {
+                    if buffer.len() > y && buffer[y].len() > screen_x {
+                        buffer[y][screen_x] = GridPixel::Bar(8);
+                    }
+                }
+
+                // precision top bar
+                if buffer.len() > height && buffer[height].len() > screen_x {
+                    buffer[height][screen_x] = GridPixel::Bar(upper_bar);
+                }
+                screen_x += 1;
+            }
+            screen_x += spacing as usize;
+        }
+    }
 
     buffer
 }
