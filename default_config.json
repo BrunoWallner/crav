@@ -3,7 +3,7 @@
     "processor": {
       "sample_rate": 44100,
       "frequency_bounds": [
-        35,
+        20,
         20000
       ],
       "resolution": null,
@@ -11,11 +11,11 @@
       "volume_normalisation": "Mixture",
       "position_normalisation": "Harmonic",
       "manual_position_distribution": null,
-      "interpolation": "Step"
+      "interpolation": "Bezier"
     },
     "fft_resolution": 4096,
     "refresh_rate": 120,
-    "gravity": 35.0
+    "gravity": 40.0
   },
   "fps": 60,
   "color": {
