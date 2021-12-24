@@ -14,7 +14,10 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            audio: audioviz::spectrum::config::StreamConfig::default(),
+            audio: audioviz::spectrum::config::StreamConfig {
+                gravity: Some(100.0),
+                ..Default::default()
+            },
             fps: 60,
             color: Color::Gradient(vec![[155, 0, 255], [0, 30, 255], [0, 255, 60]]),
             width: 1,
