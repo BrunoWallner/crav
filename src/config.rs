@@ -4,6 +4,7 @@ use splines::{Interpolation, Key, Spline}; // for interpolation in color gradien
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config {
     pub audio: audioviz::spectrum::config::StreamConfig,
+    pub mirror_x_achsis: bool,
     pub fps: u64,
     pub color: Color,
     pub width: u8,
@@ -18,6 +19,7 @@ impl Default for Config {
                 gravity: Some(100.0),
                 ..Default::default()
             },
+            mirror_x_achsis: true,
             fps: 60,
             color: Color::Gradient(vec![[155, 0, 255], [0, 30, 255], [0, 255, 60]]),
             width: 1,

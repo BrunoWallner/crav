@@ -10,6 +10,7 @@ pub fn from_buffer(
     buffer: Vec<Frequency>,
     config: &Config,
     window_size: (u32, u32),
+    mirror_x_achsis: bool,
 ) -> (Vec<Vertex>, Vec<u32>)  {
     let (w, h) = ( (window_size.0 / PIXEL_WIDTH as u32) as u16, (window_size.1 / PIXEL_HEIGHT as u32) as u16 );
     let width = 1.0 / w as f32 * 2.0; // * 2.0 because wgpu goes from -1 to 1
@@ -28,7 +29,8 @@ pub fn from_buffer(
             h,
         &buffer, 
         config.width,
-        config.spacing
+        config.spacing,
+        mirror_x_achsis
     );
 
     for y in 0..h as usize {
@@ -52,7 +54,30 @@ pub fn from_buffer(
         for x in 0..w as usize {
             let precision_height: f32 = match grid[y][x] {
                 GridPixel::Bar(bar_height) => {
-                    bar_height as f32 * (1.0 / h as f32) / 8.0 * 2.0
+                    //bar_height as f32 * (1.0 / h as f32) / 8.0 * 2.0
+                    let part = match bar_height {
+                            // top
+                            0 => 0,
+                            8 => 8,
+                            7 => 7,
+                            6 => 6,
+                            5 => 5,
+                            4 => 4,
+                            3 => 3,
+                            2 => 2,
+                            1 => 1, 
+                            // bottom
+                            16 => -8,
+                            15 => -7,
+                            14 => -6,
+                            13 => -5,
+                            12 => -4,
+                            11 => -3,
+                            10 => -2,
+                            9 => -1,
+                            _ => 0,   
+                    };
+                    part as f32 * (1.0 / h as f32) / 8.0 * 2.0
                 }
                 GridPixel::Char(_) => 0.0
             };
@@ -64,11 +89,19 @@ pub fn from_buffer(
 
             let y = y as f32 / h as f32 * 2.0 - 1.0;
 
-            vertices.push(Vertex { position: [x,  y, 0.0],   color});
-            vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
+            if precision_height < 0.0 {
+                vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
+                vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
 
-            vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
-            vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
+                vertices.push(Vertex { position: [x,  y + (2.0 / h as f32), 0.0],   color});
+                vertices.push(Vertex { position: [x + width,  y+ (2.0 / h as f32), 0.0],   color});
+            } else {
+                vertices.push(Vertex { position: [x,  y, 0.0],   color});
+                vertices.push(Vertex { position: [x + width,  y, 0.0],   color});
+    
+                vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
+                vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
+            }
 
             let i = vertices.len() as u32 - 4;
             indices.push(i+0);

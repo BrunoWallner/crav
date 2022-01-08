@@ -1,5 +1,4 @@
 use std::error::Error;
-
 mod backends;
 mod config;
 
@@ -96,6 +95,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     let audio_capture_config = CaptureConfig {
+	latency: Some(1000),
         ..Default::default()
     };
     let capture = Capture::init(audio_capture_config)

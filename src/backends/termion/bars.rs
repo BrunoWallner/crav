@@ -44,6 +44,7 @@ fn u8_to_string(pixel: GridPixel) -> String {
     let str = match pixel {
         GridPixel::Bar(b) => {
             let pixel= match b {
+                // top
                 0 => " ",
                 8 => "█",
                 7 => "▇",
@@ -52,7 +53,16 @@ fn u8_to_string(pixel: GridPixel) -> String {
                 4 => "▄",
                 3 => "▃",
                 2 => "▂",
-                1 => "▁",      
+                1 => "▁", 
+                // bottom, not the same precision as top
+                16 => "█",
+                15 => "█",
+                14 => "▀",
+                13 => "▀",
+                12 => "▀",
+                11 => "▔",
+                10 => "▔",
+                9 => "▔",
                 _ => " ",   
             };
             pixel.to_string()
@@ -72,10 +82,11 @@ pub fn draw(
     color: Color,
     width: u8,
     spacing: u8,
+    mirror_x_achsis: bool,
 ) -> Result<(), Box<dyn Error>> {
     //let calculated_width: u16 = get_bar_number(width, spacing, size[0]) as u16;
 
-    let grid = gen_grid(size[0], size[1], &data, width, spacing);
+    let grid = gen_grid(size[0], size[1], &data, width, spacing, mirror_x_achsis);
     let lines = get_lines(size[0], size[1], grid, color);
 
     for y in 0..size[1] as usize {

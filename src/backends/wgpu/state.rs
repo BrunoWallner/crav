@@ -205,7 +205,8 @@ impl State {
         let (vertices, indices) = mesh::from_buffer(
             buffer,
             &self.config,
-            (self.size.width, self.size.height)
+            (self.size.width, self.size.height),
+            self.config.mirror_x_achsis,
         );
 
         self.num_indices = indices.len() as u32;

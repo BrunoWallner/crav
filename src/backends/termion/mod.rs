@@ -39,7 +39,7 @@ pub fn run(mut config: &mut Config, audio_controller: StreamController) {
 
         let mut screen = BufWriter::new(screen.lock());
 
-        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing).unwrap();
+        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing, config.mirror_x_achsis).unwrap();
 
         screen.flush().unwrap();
 
