@@ -57,24 +57,24 @@ pub fn gen_grid(x_size: u16, y_size: u16, data: &Vec<Frequency>, width: u8, spac
             if mirror_x_achsis {
                 for _ in 0..width {
                     for y in 0..height {
-                        if buffer.len() > (y_size as usize / 2 + y) && buffer.len() > (y_size as usize / 2 - y - 1)
+                        if buffer.len() > (y_size as usize / 2 + y + 1) && buffer.len() > (y_size as usize / 2 - y)
                         && buffer[y].len() > screen_x {
                             // top mirror
-                            buffer[y_size as usize / 2 + y][screen_x] = GridPixel::Bar(8);
+                            buffer[y_size as usize / 2 + y + 1][screen_x] = GridPixel::Bar(8);
     
                             // bottom mirror
-                            buffer[y_size as usize/ 2 - y - 1][screen_x] = GridPixel::Bar(8);
+                            buffer[y_size as usize/ 2 - y][screen_x] = GridPixel::Bar(8);
                         }
                     } 
 
                     // precision bars
-                    if buffer.len() > (y_size as usize / 2 + height) && buffer.len() > (y_size as usize / 2 - height - 1)
+                    if buffer.len() > (y_size as usize / 2 + height + 1) && buffer.len() > (y_size as usize / 2 - height)
                     && buffer[height].len() > screen_x {
                         // top
-                        buffer[y_size as usize / 2 + height][screen_x] = GridPixel::Bar(precision_bar);
+                        buffer[y_size as usize / 2 + height + 1][screen_x] = GridPixel::Bar(precision_bar);
 
                         // bottom
-                        buffer[y_size as usize / 2 - height - 1][screen_x] = GridPixel::Bar(precision_bar + 8 );
+                        buffer[y_size as usize / 2 - height][screen_x] = GridPixel::Bar(precision_bar + 8 );
                     }
                     screen_x += 1;
                 }

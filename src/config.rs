@@ -48,17 +48,17 @@ impl Color {
                 let step: f32 = 1.0_f32 / g.len() as f32;
                 for (i, color) in g.iter().enumerate() {
                     r_points.push(Key::new(
-                        (i as f32 + step) * step,
+                        (i as f32 + (step * 1.5)) * step,
                         color[0] as f32,
                         Interpolation::Linear,
                     ));
                     g_points.push(Key::new(
-                        (i as f32 + step) * step,
+                        (i as f32 + (step * 1.5)) * step,
                         color[1] as f32,
                         Interpolation::Linear,
                     ));
                     b_points.push(Key::new(
-                        (i as f32 + step) * step,
+                        (i as f32 + (step * 1.5)) * step,
                         color[2] as f32,
                         Interpolation::Linear,
                     ));
