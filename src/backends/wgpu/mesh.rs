@@ -77,7 +77,7 @@ pub fn from_buffer(
                             9 => -1,
                             _ => 0,   
                     };
-                    part as f32 * (1.0 / h as f32) / 8.0 * 2.0
+                    part as f32 / h as f32 / 4.0
                 }
                 GridPixel::Char(_) => 0.0
             };
@@ -89,6 +89,7 @@ pub fn from_buffer(
 
             let y = y as f32 / h as f32 * 2.0 - 1.0;
 
+            /*
             if precision_height < 0.0 {
                 vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
                 vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
@@ -102,6 +103,20 @@ pub fn from_buffer(
                 vertices.push(Vertex { position: [x,  y + precision_height, 0.0],   color});
                 vertices.push(Vertex { position: [x + width,  y + precision_height, 0.0],   color});
             }
+            */
+            let (y1, y2) = if precision_height >= 0.0 {
+                (y, y + precision_height)
+            } else {
+                let h: f32 = 1.0 / h as f32 * 2.0;
+                let y_start = y + h;
+                (y_start + precision_height, y_start)
+            };
+
+            vertices.push(Vertex { position: [x,  y1, 0.0],   color});
+            vertices.push(Vertex { position: [x + width,  y1, 0.0],   color});
+
+            vertices.push(Vertex { position: [x,  y2, 0.0],   color});
+            vertices.push(Vertex { position: [x + width,  y2, 0.0],   color});
 
             let i = vertices.len() as u32 - 4;
             indices.push(i+0);

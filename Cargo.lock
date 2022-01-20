@@ -102,6 +102,7 @@ dependencies = [
 [[package]]
 name = "audioviz"
 version = "0.4.4"
+source = "git+https://github.com/BrunoWallner/audioviz?branch=main#786d7bb9fc7fdf154f785e395b623a995afa9f40"
 dependencies = [
  "apodize",
  "cpal",

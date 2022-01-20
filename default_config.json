@@ -3,7 +3,7 @@
     "processor": {
       "sample_rate": 44100,
       "frequency_bounds": [
-        40,
+        50,
         20000
       ],
       "resolution": null,
@@ -11,32 +11,19 @@
       "volume_normalisation": "Mixture",
       "position_normalisation": "Harmonic",
       "manual_position_distribution": null,
-      "interpolation": "Cubic"
+      "interpolation": "Step"
     },
     "fft_resolution": 2048,
     "refresh_rate": 90,
-    "gravity": null
-
+    "gravity": 50
   },
   "mirror_x_achsis": true,
   "fps": 60,
   "color": {
-    "Gradient": [
-      [
-        200,
-        200,
-        200
-      ],
-      [
-        1,
-        5,
-        63
-      ],
-      [
-        200,
-        200,
-        200
-      ]
+    "Rgb": [
+      255,
+      0,
+      24
     ]
   },
   "width": 1,
@@ -44,7 +31,7 @@
   "mirror": true,
   "wgpu": {
     "transparent": false,
-    "fullscreen": true,
+    "fullscreen": false,
     "decoration": true
   }
 }

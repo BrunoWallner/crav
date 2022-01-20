@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-audioviz = { path = "../audioviz", features = ["serde"] }
+audioviz = { git = "https://github.com/BrunoWallner/audioviz", branch = "main", features = ["serde"] }
 
 cpal = "0.13.4"
 gag = "1.0.0"
