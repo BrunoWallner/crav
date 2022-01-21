@@ -105,11 +105,11 @@ pub fn from_buffer(
             }
             */
             let (y1, y2) = if precision_height >= 0.0 {
-                (y, y + precision_height)
-            } else {
                 let h: f32 = 1.0 / h as f32 * 2.0;
-                let y_start = y + h;
-                (y_start + precision_height, y_start)
+                let y_start = y - h;
+                (y_start, y_start + precision_height)
+            } else {
+                (y + precision_height, y)
             };
 
             vertices.push(Vertex { position: [x,  y1, 0.0],   color});

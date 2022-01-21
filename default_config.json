@@ -31,7 +31,7 @@
   "mirror": true,
   "wgpu": {
     "transparent": false,
-    "fullscreen": false,
+    "fullscreen": true,
     "decoration": true
   }
 }
