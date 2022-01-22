@@ -3,10 +3,12 @@ use wgpu::util::DeviceExt;
 
 use crate::config::Config;
 
-use crate::backends::wgpu::{PIXEL_WIDTH, mesh};
+use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT, mesh};
 use crate::backends::{get_bar_number};
 
 use audioviz::spectrum::stream::StreamController;
+
+use crate::backends::audio_to_grid::Converter;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
@@ -45,19 +47,19 @@ pub struct State {
     vertex_buffer: wgpu::Buffer,
     num_indices: u32,
     index_buffer: wgpu::Buffer,
-    pub audio: StreamController,
+    pub converter: Converter,
     pub config: Config,
 }
 
 impl State {
     // Creating some of the wgpu types requires async code
-    pub async fn new(window: &Window, audio: StreamController, config: Config) -> Self {
+    pub async fn new(window: &Window, mut converter: Converter, config: Config) -> Self {
         let size = window.inner_size();
 
         let screen_width = size.width as u16 / PIXEL_WIDTH;
         let mut bar_number = get_bar_number(config.width, config.spacing, screen_width) as usize;
         if config.mirror {bar_number /= 2}
-        audio.set_resolution(bar_number);
+        converter.set_resolution(bar_number);
 
         // The instance is a handle to our GPU
         // BackendBit::PRIMARY => Vulkan + Metal + DX12 + Browser WebGPU
@@ -170,7 +172,7 @@ impl State {
             vertex_buffer,
             num_indices: 0,
             index_buffer,
-            audio,
+            converter,
             config,
         }
     }
@@ -185,7 +187,7 @@ impl State {
             let screen_width = self.size.width as u16 / PIXEL_WIDTH;
             let mut bar_number = get_bar_number(self.config.width, self.config.spacing, screen_width) as usize;
             if self.config.mirror {bar_number /= 2}
-            self.audio.set_resolution(bar_number);
+            self.converter.set_resolution(bar_number);
         }
     }
 
@@ -194,16 +196,9 @@ impl State {
     }
 
     pub fn update(&mut self) {
-        let mut buffer = self.audio.get_frequencies();
-        
-        if self.config.mirror {
-            for i in 0..buffer.len() {
-                buffer.insert(0, buffer[i*2].clone());
-            }
-        }
-
+        let (w, h) = ( (self.size.width / PIXEL_WIDTH as u32) as u16, (self.size.height / PIXEL_HEIGHT as u32) as u16 );
         let (vertices, indices) = mesh::from_buffer(
-            buffer,
+            self.converter.gen_grid(w, h),
             &self.config,
             (self.size.width, self.size.height),
             self.config.mirror_x_achsis,

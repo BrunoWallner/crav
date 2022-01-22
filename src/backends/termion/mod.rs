@@ -14,7 +14,9 @@ use std::io::{Write, stdout};
 
 use audioviz::spectrum::stream::StreamController;
 
-pub fn run(mut config: &mut Config, audio_controller: StreamController) {
+use crate::backends::audio_to_grid::Converter;
+
+pub fn run(mut config: &mut Config, mut converter: Converter) {
     let raw = stdout().into_raw_mode().unwrap();
     let mut screen = AlternateScreen::from(raw);
     write!(screen, "{}", termion::cursor::Hide).unwrap();
@@ -27,23 +29,26 @@ pub fn run(mut config: &mut Config, audio_controller: StreamController) {
 
     let mut bar_number: usize = get_bar_number(config.width, config.spacing, width);
     if config.mirror {bar_number /= 2}
-    audio_controller.set_resolution(bar_number);
+    converter.set_resolution(bar_number);
 
     'main: loop {
-        let mut data = audio_controller.get_frequencies();
-        if config.mirror {
-            for i in 0..data.len() {
-                data.insert(0, data[i * 2].clone());
-            }
-        }
-
         let mut screen = BufWriter::new(screen.lock());
 
-        bars::draw(&data, &mut screen, [width, height], config.color.clone(), config.width, config.spacing, config.mirror_x_achsis).unwrap();
+        let grid = converter.gen_grid(width, height);
+        bars::draw(
+            grid, 
+            &mut screen, 
+            [width, height], 
+            config.color.clone(), 
+            config.width, 
+            config.spacing, 
+            config.mirror_x_achsis
+        ).unwrap();
 
         screen.flush().unwrap();
 
         match ev.get().unwrap() {
+            /*
             events::Event::Input(input) => match input {
                 Key::Char('q') => break 'main,
                 Key::Char('+') => audio_controller.adjust_volume(1.1),
@@ -59,13 +64,14 @@ pub fn run(mut config: &mut Config, audio_controller: StreamController) {
 
                 _ => (),
             }
+            */
             events::Event::Resize( (w, h)) => {
                 width = w;
                 height = h;
 
                 let mut bar_number: usize = get_bar_number(config.width, config.spacing, w);
                 if config.mirror {bar_number /= 2}
-                audio_controller.set_resolution(bar_number);
+                converter.set_resolution(bar_number);
                 write!(screen, "{}", termion::clear::All).unwrap();
             }
             _ => (),

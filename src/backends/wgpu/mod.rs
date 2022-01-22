@@ -12,14 +12,16 @@ use winit::{
     window::WindowBuilder,
     window::Fullscreen,
 };
-use winit_input_helper::WinitInputHelper;
+//use winit_input_helper::WinitInputHelper;
 
-use audioviz::spectrum::stream::StreamController;
+//use audioviz::spectrum::stream::StreamController;
+
+use crate::backends::audio_to_grid::Converter;
 
 pub const PIXEL_WIDTH: u16 = 9;
 pub const PIXEL_HEIGHT: u16 = 18;
 
-pub fn run(config: &mut Config, audio_controller: StreamController) {
+pub fn run(config: &mut Config, converter: Converter) {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_transparent(config.wgpu.transparent)
@@ -31,13 +33,14 @@ pub fn run(config: &mut Config, audio_controller: StreamController) {
     if config.wgpu.fullscreen {
         window.set_fullscreen(Some(Fullscreen::Borderless(None)));
     }
-    let a_c = audio_controller.clone();
+    //let a_c = audio_controller.clone();
 
-    let mut state = pollster::block_on(state::State::new(&window, a_c, config.clone() ));
+    let mut state = pollster::block_on(state::State::new(&window, converter, config.clone() ));
 
-    let mut input = WinitInputHelper::new();
+    // let mut input = WinitInputHelper::new();
     let config = config.clone();
     event_loop.run(move |event, _, control_flow| {
+        /*
         if input.update(&event) {
             if input.key_pressed(VirtualKeyCode::Plus) || input.key_pressed(VirtualKeyCode::NumpadAdd) {
                 audio_controller.adjust_volume(1.1);
@@ -54,6 +57,7 @@ pub fn run(config: &mut Config, audio_controller: StreamController) {
                 audio_controller.set_resolution(bar_number);
             }
         }
+        */
 
 
         match event {

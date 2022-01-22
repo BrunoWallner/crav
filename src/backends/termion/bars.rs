@@ -3,7 +3,7 @@ use std::error::Error;
 use termion::color;
 use crate::config::Color;
 use std::io::BufWriter;
-use crate::backends::{gen_grid, GridPixel};
+use crate::backends::GridPixel;
 
 use audioviz::spectrum::Frequency;
 
@@ -76,7 +76,7 @@ fn u8_to_string(pixel: GridPixel) -> String {
 }
 
 pub fn draw(
-    data: &Vec<Frequency>, 
+    grid: Vec<Vec<GridPixel>>, 
     screen: &mut BufWriter<StdoutLock>, 
     size: [u16; 2], 
     color: Color,
@@ -86,7 +86,7 @@ pub fn draw(
 ) -> Result<(), Box<dyn Error>> {
     //let calculated_width: u16 = get_bar_number(width, spacing, size[0]) as u16;
 
-    let grid = gen_grid(size[0], size[1], &data, width, spacing, mirror_x_achsis);
+    //let grid = gen_grid(size[0], size[1], &data, width, spacing, mirror_x_achsis);
     let lines = get_lines(size[0], size[1], grid, color);
 
     for y in 0..size[1] as usize {

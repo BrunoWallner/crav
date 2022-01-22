@@ -1,13 +1,13 @@
 use crate::backends::wgpu::Vertex;
 use crate::config::{Config, Color};
-use crate::backends::{gen_grid, GridPixel};
+use crate::backends::GridPixel;
 
 use crate::backends::wgpu::{PIXEL_WIDTH, PIXEL_HEIGHT};
 
 use audioviz::spectrum::Frequency;
 
 pub fn from_buffer(
-    buffer: Vec<Frequency>,
+    grid: Vec<Vec<GridPixel>>,
     config: &Config,
     window_size: (u32, u32),
     mirror_x_achsis: bool,
@@ -20,10 +20,11 @@ pub fn from_buffer(
     let mut vertices: Vec<Vertex> = Vec::new();
     let mut indices: Vec<u32> = Vec::new();
 
-    if buffer.len() == 0 {
+    if grid.is_empty() {
         return (Vec::new(), Vec::new());
     }
 
+    /*
     let grid = gen_grid(
             w,
             h,
@@ -32,6 +33,7 @@ pub fn from_buffer(
         config.spacing,
         mirror_x_achsis
     );
+    */
 
     for y in 0..h as usize {
         let color_clone = config.color.clone();

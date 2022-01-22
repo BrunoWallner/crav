@@ -11,6 +11,8 @@ use gag::Gag;
 use clap::{Arg, App, AppSettings};
 use std::fs;
 
+use backends::audio_to_grid::Converter;
+
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -94,6 +96,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     };
 
+    /*
     let audio_capture_config = CaptureConfig {
 	latency: Some(1000),
         ..Default::default()
@@ -102,8 +105,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 	.unwrap();
     let audio = Stream::init_with_capture(&capture, config.audio.clone());
     let audio_controller: StreamController = audio.get_controller();
+    */
+    let audio_capture_config = CaptureConfig::default();
+    let capture = Capture::init(audio_capture_config).unwrap();
+    let converter: Converter = match config.visualisation {
+        config::Visualisation::Spectrum => {
+            let stream = Stream::init_with_capture(&capture, config.audio.clone());
+
+            Converter::from_stream(stream, config.clone())
+        },
+        config::Visualisation::Wave => {
+            Converter::from_capture(capture, config.clone())
+        }
+    };
 
 
-    backend.run(&mut config, audio_controller);
+    backend.run(&mut config, converter);
     Ok(())
 }

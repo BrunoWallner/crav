@@ -2,6 +2,12 @@ use serde::{Deserialize, Serialize};
 use splines::{Interpolation, Key, Spline}; // for interpolation in color gradients
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum Visualisation {
+    Spectrum,
+    Wave
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config {
     pub audio: audioviz::spectrum::config::StreamConfig,
     pub mirror_x_achsis: bool,
@@ -10,6 +16,7 @@ pub struct Config {
     pub width: u8,
     pub spacing: u8,
     pub mirror: bool,
+    pub visualisation: Visualisation,
     pub wgpu: WgpuConfig,
 }
 impl Default for Config {
@@ -25,6 +32,7 @@ impl Default for Config {
             width: 1,
             spacing: 0,
             mirror: true,
+            visualisation: Visualisation::Spectrum,
             wgpu: WgpuConfig::default(),
         }
     }
