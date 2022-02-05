@@ -114,7 +114,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             Converter::from_stream(stream, config.clone())
         },
-        config::Visualisation::Wave => {
+        config::Visualisation::Scope => {
             Converter::from_capture(capture, config.clone())
         }
     };

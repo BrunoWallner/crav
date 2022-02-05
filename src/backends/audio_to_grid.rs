@@ -47,7 +47,7 @@ impl Converter {
     fn get_data(&mut self) -> Option<Vec<f32>> {
         if let Some(raw) = &self.raw_receiver {
             let mut data: Vec<f32> = match raw.receive_data() {
-                Some(d) => {
+                Ok(d) => {
                     let mut b: Vec<f32> = Vec::new();
 
                     let bufs = d.chunks(1);
@@ -63,7 +63,7 @@ impl Converter {
                     }
                     b
                 },
-                None => Vec::new()
+                Err(_) => Vec::new()
             };
             self.raw_buf.append(&mut data);
             if self.raw_buf.len() >= self.resolution {
@@ -71,24 +71,14 @@ impl Converter {
                 self.raw_buf.drain(..);
             }
             return Some(self.show_vec.clone());
-            /*
-            self.raw_vec.append(&mut data);
-            if self.raw_vec.len() > self.resolution {
-                let to_clear: usize = self.raw_vec.len() - self.resolution;
-                self.raw_vec.drain(..to_clear);
-
-                return Some(self.raw_vec.clone());
-            }
-            */
         }
         if let Some(stream) = &self.stream_controller {
-            if let Ok(freqs) = stream.get_frequencies() {
-                let data: Vec<f32> = freqs
-                    .into_iter()
-                    .map(|x| x.volume)
-                    .collect();
-                return Some(data);
-            }
+            let freqs = stream.get_frequencies();
+            let data: Vec<f32> = freqs
+                .into_iter()
+                .map(|x| x.volume)
+                .collect();
+            return Some(data);
         }
         
         None
@@ -104,9 +94,6 @@ impl Converter {
             for i in 0..data.len() {
                 data.insert(0, data[i*2].clone());
             }
-        }
-        for d in data.iter_mut() {
-            *d += y_size as f32 / 8.0;
         }
 
         let mut screen_x: usize = 0;

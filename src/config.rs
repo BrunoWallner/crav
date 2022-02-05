@@ -4,7 +4,7 @@ use splines::{Interpolation, Key, Spline}; // for interpolation in color gradien
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Visualisation {
     Spectrum,
-    Wave
+    Scope
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

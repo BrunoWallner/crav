@@ -48,23 +48,10 @@ pub fn run(mut config: &mut Config, mut converter: Converter) {
         screen.flush().unwrap();
 
         match ev.get().unwrap() {
-            /*
             events::Event::Input(input) => match input {
                 Key::Char('q') => break 'main,
-                Key::Char('+') => audio_controller.adjust_volume(1.1),
-                Key::Char('-') => audio_controller.adjust_volume(0.9),
-                Key::Char('m') => {
-                    let mut bar_number = get_bar_number(config.width, config.spacing, width);
-                    config.mirror = !config.mirror;
-                    if config.mirror {
-                        bar_number /= 2
-                    }
-                    audio_controller.set_resolution(bar_number);
-                },
-
                 _ => (),
             }
-            */
             events::Event::Resize( (w, h)) => {
                 width = w;
                 height = h;
